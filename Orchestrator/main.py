@@ -4,9 +4,13 @@ import time
 from datetime import datetime
 
 from checker import Checker
+from utils import get_logger
 
 
 def main():
+
+    logger = get_logger("Orchestrator")
+
     checker_configs: list[str] = [
         "../CyberChallenge.IT-AD-2024/checkers/CCForms-1",
         "../CyberChallenge.IT-AD-2024/checkers/CCForms-2",
@@ -29,7 +33,7 @@ def main():
 
     # NOTE: Figure out a better way to handle the timing? Currently goes around 0.000270 seconds faster than real time.
     for nround in range(ROUNDS):
-        print(f"Round {nround} started at {datetime.now().time()}")
+        logger.info(f"Round {nround} started at {datetime.now().time()}")
         start_time = time.time_ns()
 
         # NOTE: Might be useful to multithread at least the checkers. One round with a single team takes almost a minute by itself.
@@ -44,7 +48,7 @@ def main():
         elapsed_time = round((end_time - start_time) / 1_000_000_000, 5)  # Round nanoseconds to seconds
 
         if nround < ROUNDS - 1:  # Skip the waiting when exiting from the last round.
-            print(f"Going to sleep for {ROUND_TIME - elapsed_time} seconds")
+            logger.info(f"Going to sleep for {ROUND_TIME - elapsed_time} seconds")
             time.sleep(ROUND_TIME - elapsed_time)
 
     report_dir = "reports/" + datetime.now().strftime("%y-%m-%d_%H-%M-%S")

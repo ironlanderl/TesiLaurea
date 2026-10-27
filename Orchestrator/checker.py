@@ -3,7 +3,7 @@ import pathlib
 import subprocess
 from typing import override
 
-from utils import Action, Status, generate_flag
+from utils import Action, Status, generate_flag, get_logger
 
 
 class Checker:
@@ -31,6 +31,8 @@ class Checker:
 
         self.status: dict[int, dict[int, dict[str, Status | str | None]]] = {}
 
+        self.logger = get_logger(self.name)
+
     def check_sla(self, team: int, nround: int) -> None:
         """
         Checks the SLA status of the service
@@ -54,19 +56,19 @@ class Checker:
                 stderr=subprocess.STDOUT,
             )
         except subprocess.TimeoutExpired:
-            print(f"Timeout expired for {self.name}")
+            self.logger.info(f"Timeout expired for {self.name}")
             self.status[nround][team]["SLA"] = Status.DOWN
         except subprocess.CalledProcessError as e:
             # Filter out eventual non compliant return values (such as -1)
             if e.returncode not in Status:
-                print(f"Invalid return code '{e.returncode}'. Text is {e.output}")
+                self.logger.error(f"Invalid return code '{e.returncode}'. Text is {e.output}")
                 return
-            print(
-                f"Checker {self.name} returned error {e.returncode} with text {e.output}. Corresponds to {Status(e.returncode).name}"
+            self.logger.info(
+                f"Operation {Action.CHECK_SLA.name} returned error {e.returncode} with text {e.output}. Corresponds to {Status(e.returncode).name}"
             )
             self.status[nround][team]["SLA"] = Status(e.returncode)
         except Exception as e:
-            print(f"Generic exception happened: {e}")
+            self.logger.error(f"Generic exception happened: {e}")
 
     def check_get(self, team: int, nround: int) -> None:
         """
@@ -94,15 +96,19 @@ class Checker:
                 stderr=subprocess.STDOUT,
             )
         except subprocess.TimeoutExpired:
-            print(f"Timeout expired for {self.name}")
+            self.logger.info(f"Timeout expired for {self.name}")
             self.status[nround][team]["GET"] = Status.DOWN
         except subprocess.CalledProcessError as e:
-            print(
-                f"Checker {self.name} returned error {e.returncode} with text {e.output}. Corresponds to {Status(e.returncode).name}"
+            # Filter out eventual non compliant return values (such as -1)
+            if e.returncode not in Status:
+                self.logger.error(f"Invalid return code '{e.returncode}'. Text is {e.output}")
+                return
+            self.logger.info(
+                f"Operation {Action.GET_FLAG.name} returned error {e.returncode} with text {e.output}. Corresponds to {Status(e.returncode).name}"
             )
             self.status[nround][team]["GET"] = Status(e.returncode)
         except Exception as e:
-            print(f"Generic exception happened: {e}")
+            self.logger.error(f"Generic exception happened: {e}")
 
     def check_put(self, team: int, nround: int) -> None:
         """
@@ -131,15 +137,19 @@ class Checker:
                 stderr=subprocess.STDOUT,
             )
         except subprocess.TimeoutExpired:
-            print(f"Timeout expired for {self.name}")
+            self.logger.info(f"Timeout expired for {self.name}")
             self.status[nround][team]["PUT"] = Status.DOWN
         except subprocess.CalledProcessError as e:
-            print(
-                f"Checker {self.name} returned error {e.returncode} with text {e.output}. Corresponds to {Status(e.returncode).name}"
+            # Filter out eventual non compliant return values (such as -1)
+            if e.returncode not in Status:
+                self.logger.error(f"Invalid return code '{e.returncode}'. Text is {e.output}")
+                return
+            self.logger.info(
+                f"Operation {Action.PUT_FLAG.name} returned error {e.returncode} with text {e.output}. Corresponds to {Status(e.returncode).name}"
             )
             self.status[nround][team]["PUT"] = Status(e.returncode)
         except Exception as e:
-            print(f"Generic exception happened: {e}")
+            self.logger.error(f"Generic exception happened: {e}")
 
     def __create_dict_data(self, team: int, nround: int) -> None:
         # NOTE: Probably not thread safe.

@@ -1,3 +1,4 @@
+import logging
 import random
 import string
 from enum import Enum
@@ -46,3 +47,17 @@ def generate_flag(team: int, nround: int, nservice: int = 0) -> str:
         + "".join(random.choices(alphabet, k=25))
         + "="
     )
+
+
+def get_logger(module: str) -> logging.Logger:
+    logger = logging.getLogger(module)
+    logger.setLevel(logging.DEBUG)
+    console_handler = logging.StreamHandler()
+    logger.addHandler(console_handler)
+    formatter = logging.Formatter(
+        "{asctime} - {levelname} - {name} - {message}",
+        style="{",
+        datefmt="%Y-%m-%d %H:%M",
+    )
+    console_handler.setFormatter(formatter)
+    return logger
