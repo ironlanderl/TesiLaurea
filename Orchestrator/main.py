@@ -37,7 +37,7 @@ def main():
 
         print(f"Going to sleep for {ROUND_TIME - elapsed_time} seconds")
 
-        time.sleep(ROUND_TIME - elapsed_time)
+        time.sleep(ROUND_TIME - elapsed_time)  # TODO: Don't sleep on last round
 
     print("=" * 30)
     pprint(checkers[0].status)

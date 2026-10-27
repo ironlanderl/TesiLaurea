@@ -16,7 +16,33 @@ class Action(Enum):
     GET_FLAG = "GET_FLAG"
 
 
-def generate_flag() -> str:
+# From https://stackoverflow.com/questions/1181919/python-base-36-encoding and modified
+def base36encode(number: int) -> str:
+    """Converts an integer to a base36 string."""
+
+    alphabet = string.digits + string.ascii_uppercase
+
+    base36 = ""
+
+    if 0 <= number < len(alphabet):
+        return alphabet[number].zfill(2)
+
+    while number != 0:
+        number, i = divmod(number, len(alphabet))
+        base36 = alphabet[i] + base36
+
+    return base36
+
+
+def generate_flag(team: int, nround: int, nservice: int = 0) -> str:
+    # TODO: Figure out how to assign service numbers
+
     alphabet: str = string.ascii_uppercase + string.digits
 
-    return "".join(random.choices(alphabet, k=31)) + "="
+    return (
+        base36encode(nround)
+        + base36encode(team)
+        + base36encode(nservice)
+        + "".join(random.choices(alphabet, k=25))
+        + "="
+    )

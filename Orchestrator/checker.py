@@ -3,7 +3,7 @@ import pathlib
 import subprocess
 from typing import override
 
-from utils import Action, Status
+from utils import Action, Status, generate_flag
 
 
 class Checker:
@@ -29,7 +29,7 @@ class Checker:
         self.PUT_timeout: int = data["timeout"]["PUT_FLAG"] / 1000
         self.GET_timeout: int = data["timeout"]["GET_FLAG"] / 1000
 
-        self.status: dict[int, dict[int, dict[str, Status | None]]] = {}
+        self.status: dict[int, dict[int, dict[str, Status | str | None]]] = {}
 
     def check_sla(self, team: int, nround: int) -> None:
         # Since sla is always checked first (for now at least), always have it initialize the round status dict
@@ -59,6 +59,11 @@ class Checker:
             print(f"Generic exception happened: {e}")
 
     def check_get(self, team: int, nround: int) -> None:
+
+        # TODO: Don't check if there are no valid flags in the last five ticks
+
+        current_flag: str = self.status[nround][team]["flag"]
+
         try:
             _ = subprocess.check_output(
                 self.command.split(" "),
@@ -68,7 +73,7 @@ class Checker:
                     "ACTION": Action.GET_FLAG.name,
                     "TEAM_ID": str(team),
                     "ROUND": str(nround),
-                    "FLAG": "B" * 31 + "=",
+                    "FLAG": current_flag,
                 },
                 stderr=subprocess.STDOUT,
             )
@@ -84,6 +89,11 @@ class Checker:
             print(f"Generic exception happened: {e}")
 
     def check_put(self, team: int, nround: int) -> None:
+        # TODO: Don't execute on last round.
+
+        new_flag = generate_flag(team, nround)
+        self.status[nround][team]["flag"] = new_flag
+
         try:
             _ = subprocess.check_output(
                 self.command.split(" "),
@@ -93,7 +103,7 @@ class Checker:
                     "ACTION": Action.PUT_FLAG.name,
                     "TEAM_ID": str(team),
                     "ROUND": str(nround),
-                    "FLAG": "B" * 31 + "=",
+                    "FLAG": new_flag,
                 },
                 stderr=subprocess.STDOUT,
             )
