@@ -133,6 +133,8 @@ class Checker:
                     "TEAM_ID": str(team),
                     "ROUND": str(nround),
                     "FLAG": new_flag,
+                    "FLAGID_SERVICE": "http://127.0.0.1:5000", # TODO: Don't hardcode these
+                    "FLAGID_TOKEN": "5774A8F69DDEC6C954D2CBBDE2B5A7EF"
                 },
                 stderr=subprocess.STDOUT,
             )
