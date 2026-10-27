@@ -1,7 +1,7 @@
 import json
+import os
 import time
 from datetime import datetime
-from pprint import pprint
 
 from checker import Checker
 
@@ -10,6 +10,12 @@ def main():
     checker_configs: list[str] = [
         "../CyberChallenge.IT-AD-2024/checkers/CCForms-1",
         "../CyberChallenge.IT-AD-2024/checkers/CCForms-2",
+        "../CyberChallenge.IT-AD-2024/checkers/ExCCel-1/",
+        "../CyberChallenge.IT-AD-2024/checkers/ExCCel-2/",
+        "../CyberChallenge.IT-AD-2024/checkers/CCalendar-1/",
+        "../CyberChallenge.IT-AD-2024/checkers/CCalendar-2/",
+        "../CyberChallenge.IT-AD-2024/checkers/Inlook-1/",
+        "../CyberChallenge.IT-AD-2024/checkers/Inlook-2/",
     ]
 
     checkers: list[Checker] = []
@@ -18,13 +24,15 @@ def main():
         checkers.append(Checker(path))
 
     ROUNDS = 3
-    ROUND_TIME = 30  # Seconds
-    TEAMS = 3
+    ROUND_TIME = 60  # Seconds
+    TEAMS = 1
 
+    # NOTE: Figure out a better way to handle the timing? Currently goes around 0.000270 seconds faster than real time.
     for nround in range(ROUNDS):
         print(f"Round {nround} started at {datetime.now().time()}")
         start_time = time.time_ns()
 
+        # NOTE: Might be useful to multithread at least the checkers. One round with a single team takes almost a minute by itself.
         for checker in checkers:
             for team in range(TEAMS):
                 checker.check_sla(team, nround)
@@ -35,19 +43,16 @@ def main():
 
         elapsed_time = round((end_time - start_time) / 1_000_000_000, 5)  # Round nanoseconds to seconds
 
-        print(f"Going to sleep for {ROUND_TIME - elapsed_time} seconds")
+        if nround < ROUNDS - 1:  # Skip the waiting when exiting from the last round.
+            print(f"Going to sleep for {ROUND_TIME - elapsed_time} seconds")
+            time.sleep(ROUND_TIME - elapsed_time)
 
-        time.sleep(ROUND_TIME - elapsed_time)  # TODO: Don't sleep on last round
+    report_dir = "reports/" + datetime.now().strftime("%y-%m-%d_%H-%M-%S")
+    os.makedirs(report_dir)
 
-    print("=" * 30)
-    pprint(checkers[0].status)
-    print("-" * 30)
-    pprint(checkers[1].status)
-
-    print("=" * 30)
-    print(json.dumps(checkers[0].status, default=lambda x: x.name, indent=2))
-    print("-" * 30)
-    print(json.dumps(checkers[1].status, default=lambda x: x.name, indent=2))
+    for checker in checkers:
+        with open(f"{report_dir}/checker_{checker.name}.json", "w") as f:
+            json.dump(checker.status, f, default=lambda x: x.name, indent=2)
 
 
 if __name__ == "__main__":

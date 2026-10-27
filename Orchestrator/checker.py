@@ -32,6 +32,13 @@ class Checker:
         self.status: dict[int, dict[int, dict[str, Status | str | None]]] = {}
 
     def check_sla(self, team: int, nround: int) -> None:
+        """
+        Checks the SLA status of the service
+
+        Args:
+            team (int): zero indexed team number
+            nround(int): zero indexed current tick number
+        """
         # Since sla is always checked first (for now at least), always have it initialize the round status dict
         self.__create_dict_data(team, nround)
         try:
@@ -50,7 +57,10 @@ class Checker:
             print(f"Timeout expired for {self.name}")
             self.status[nround][team]["SLA"] = Status.DOWN
         except subprocess.CalledProcessError as e:
-            # TODO: Filter for only the enum return values
+            # Filter out eventual non compliant return values (such as -1)
+            if e.returncode not in Status:
+                print(f"Invalid return code '{e.returncode}'. Text is {e.output}")
+                return
             print(
                 f"Checker {self.name} returned error {e.returncode} with text {e.output}. Corresponds to {Status(e.returncode).name}"
             )
@@ -59,7 +69,13 @@ class Checker:
             print(f"Generic exception happened: {e}")
 
     def check_get(self, team: int, nround: int) -> None:
+        """
+        Checks the ability to retrieve flags from the system
 
+        Args:
+            team (int): zero indexed team number
+            nround(int): zero indexed current tick number
+        """
         # TODO: Don't check if there are no valid flags in the last five ticks
 
         current_flag: str = self.status[nround][team]["flag"]
@@ -89,6 +105,13 @@ class Checker:
             print(f"Generic exception happened: {e}")
 
     def check_put(self, team: int, nround: int) -> None:
+        """
+        Checks the ability to insert flags into the system
+
+        Args:
+            team (int): zero indexed team number
+            nround(int): zero indexed current tick number
+        """
         # TODO: Don't execute on last round.
 
         new_flag = generate_flag(team, nround)
