@@ -1,0 +1,11 @@
+sequenceDiagram
+  Orchestratore ->> CCForms-1: CHECK_SLA
+  CCForms-1 ->> Orchestratore: SLA_STATUS
+
+  Orchestratore ->> CCForms-1: PUT_FLAG
+  CCForms-1 ->> FlagIDService: postFlagId
+  CCForms-1 ->> Orchestratore: PUT_STATUS
+
+  Orchestratore ->> CCForms-1: GET_FLAG
+  CCForms-1 ->> Orchestratore: GET_STATUS
+
