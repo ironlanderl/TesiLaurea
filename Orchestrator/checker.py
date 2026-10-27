@@ -1,32 +1,9 @@
 import json
 import pathlib
-import random
-import string
 import subprocess
-import time
-from datetime import datetime
-from enum import Enum
-from pprint import pprint
 from typing import override
 
-
-class Status(Enum):
-    OK = 101
-    DOWN = 104
-    CHECKER_DISABLED = 109
-    ERROR = 110
-
-
-class Action(Enum):
-    CHECK_SLA = "CHECK_SLA"
-    PUT_FLAG = "PUT_FLAG"
-    GET_FLAG = "GET_FLAG"
-
-
-def generate_flag() -> str:
-    alphabet: str = string.ascii_uppercase + string.digits
-
-    return "".join(random.choices(alphabet, k=31)) + "="
+from utils import Action, Status
 
 
 class Checker:
@@ -52,7 +29,7 @@ class Checker:
         self.PUT_timeout: int = data["timeout"]["PUT_FLAG"] / 1000
         self.GET_timeout: int = data["timeout"]["GET_FLAG"] / 1000
 
-        self.status = {}
+        self.status: dict[int, dict[int, dict[str, Status | None]]] = {}
 
     def check_sla(self, team: int, nround: int) -> None:
         # Since sla is always checked first (for now at least), always have it initialize the round status dict
@@ -149,47 +126,3 @@ class Checker:
     @override
     def __repr__(self) -> str:
         return f"{self.name}: {self.command}, {self.SLA_timeout}, {self.PUT_timeout}, {self.GET_timeout}"
-
-
-checker_configs: list[str] = [
-    "./CyberChallenge.IT-AD-2024/checkers/CCForms-1",
-    "./CyberChallenge.IT-AD-2024/checkers/CCForms-2",
-]
-
-checkers: list[Checker] = []
-
-for path in checker_configs:
-    checkers.append(Checker(path))
-
-ROUNDS = 3
-ROUND_TIME = 30  # Seconds
-TEAMS = 3
-
-for nround in range(3):
-    print(f"Round {nround} started at {datetime.now().time()}")
-    start_time = time.time_ns()
-
-    for checker in checkers:
-        for team in range(TEAMS):
-            checker.check_sla(team, nround)
-            checker.check_put(team, nround)
-            checker.check_get(team, nround)
-
-    end_time = time.time_ns()
-
-    elapsed_time = round((end_time - start_time) / 1_000_000_000, 5)  # Round nanoseconds to seconds
-
-    print(f"Going to sleep for {ROUND_TIME - elapsed_time} seconds")
-
-    time.sleep(ROUND_TIME - elapsed_time)
-
-
-print("=" * 30)
-pprint(checkers[0].status)
-print("-" * 30)
-pprint(checkers[1].status)
-
-print("=" * 30)
-print(json.dumps(checkers[0].status, default=lambda x: x.name, indent=2))
-print("-" * 30)
-print(json.dumps(checkers[1].status, default=lambda x: x.name, indent=2))
