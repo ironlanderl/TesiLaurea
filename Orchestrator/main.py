@@ -6,6 +6,13 @@ from datetime import datetime
 from checker import Checker
 from utils import get_logger
 
+# TODO: Change how this works.
+# After some research, checks only seem to happen between 1 second and 1 minute and 40 seconds after the tick starts.
+# Current idea: Main (thread 1) -> Scheduler (thread 1) -> Checker per team (each one it's own thread. All operations still happen one after the other for now)
+# As in, the main just calls the scheduler, the scheduler randomizes execution times, starts a thread for each checker with a sleep until their time, then returns. The main will then calculate the time until the next tick, at which point the cycle repeats
+# There shouldn't be an issue with having to wait for processes, but still might be needed.
+# Also will have to use locks for concurrent access to the state dict.
+# 
 
 def main():
 

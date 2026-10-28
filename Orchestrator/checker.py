@@ -79,6 +79,7 @@ class Checker:
             nround(int): zero indexed current tick number
         """
         # TODO: Don't check if there are no valid flags in the last five ticks
+        # Also, check if all of the five previous flags are valid
 
         current_flag: str = self.status[nround][team]["flag"]
 

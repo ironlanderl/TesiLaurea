@@ -1,0 +1,795 @@
+vim: filetype=compilation:path+=/run/media/ironlanderl/prefixes/dev/TesiLaurea
+Compilation started at mer ott 28 21:24:10
+
+python /run/media/ironlanderl/prefixes/dev/TesiLaurea/CaronteData/main.py
+FLAG_IN tick 0 happened at 2025-06-20 09:00:01.019000
+FLAG_IN tick 1 happened at 2025-06-20 09:02:07.929000
+FLAG_IN tick 2 happened at 2025-06-20 09:05:04.519000
+FLAG_IN tick 3 happened at 2025-06-20 09:07:04.018000
+FLAG_IN tick 4 happened at 2025-06-20 09:08:33.498000
+FLAG_IN tick 5 happened at 2025-06-20 09:10:03.546000
+FLAG_IN tick 6 happened at 2025-06-20 09:12:03.772000
+FLAG_IN tick 6 happened at 2025-06-20 09:12:03.772000
+Multiple FLAG_IN at tick 6
+FLAG_IN tick 7 happened at 2025-06-20 09:14:18.685000
+FLAG_IN tick 8 happened at 2025-06-20 09:16:02.216000
+FLAG_IN tick 9 happened at 2025-06-20 09:18:07.433000
+FLAG_IN tick 10 happened at 2025-06-20 09:20:22.943000
+FLAG_IN tick 11 happened at 2025-06-20 09:22:35.007000
+FLAG_IN tick 12 happened at 2025-06-20 09:24:09.163000
+FLAG_IN tick 13 happened at 2025-06-20 09:26:57.896000
+FLAG_IN tick 14 happened at 2025-06-20 09:28:12.308000
+FLAG_IN tick 15 happened at 2025-06-20 09:31:22.622000
+FLAG_IN tick 16 happened at 2025-06-20 09:32:46.099000
+FLAG_IN tick 17 happened at 2025-06-20 09:34:51.235000
+FLAG_IN tick 18 happened at 2025-06-20 09:36:31.961000
+FLAG_IN tick 19 happened at 2025-06-20 09:38:02.794000
+FLAG_IN tick 20 happened at 2025-06-20 09:40:47.238000
+FLAG_IN tick 21 happened at 2025-06-20 09:42:01.691000
+FLAG_IN tick 22 happened at 2025-06-20 09:45:21.688000
+FLAG_IN tick 23 happened at 2025-06-20 09:46:24.806000
+FLAG_IN tick 24 happened at 2025-06-20 09:48:01.931000
+FLAG_IN tick 25 happened at 2025-06-20 09:50:56.287000
+FLAG_IN tick 26 happened at 2025-06-20 09:53:15.747000
+FLAG_IN tick 27 happened at 2025-06-20 09:54:10.417000
+FLAG_IN tick 28 happened at 2025-06-20 09:57:21.834000
+FLAG_IN tick 29 happened at 2025-06-20 09:59:14.872000
+FLAG_IN tick 30 happened at 2025-06-20 10:00:20.783000
+FLAG_IN tick 31 happened at 2025-06-20 10:02:16.474000
+FLAG_IN tick 32 happened at 2025-06-20 10:05:22.862000
+FLAG_IN tick 33 happened at 2025-06-20 10:06:32.067000
+FLAG_IN tick 34 happened at 2025-06-20 10:08:35.413000
+FLAG_IN tick 35 happened at 2025-06-20 10:10:06.762000
+FLAG_IN tick 36 happened at 2025-06-20 10:13:19.644000
+FLAG_IN tick 37 happened at 2025-06-20 10:15:04.986000
+FLAG_IN tick 38 happened at 2025-06-20 10:16:10.459000
+FLAG_IN tick 39 happened at 2025-06-20 10:18:24.088000
+FLAG_IN tick 40 happened at 2025-06-20 10:20:38.745000
+FLAG_IN tick 41 happened at 2025-06-20 10:22:01.934000
+FLAG_IN tick 42 happened at 2025-06-20 10:24:31.057000
+FLAG_IN tick 43 happened at 2025-06-20 10:26:54.145000
+FLAG_IN tick 44 happened at 2025-06-20 10:28:02.238000
+FLAG_IN tick 45 happened at 2025-06-20 10:31:17.001000
+FLAG_IN tick 46 happened at 2025-06-20 10:32:46.124000
+FLAG_IN tick 47 happened at 2025-06-20 10:34:13.646000
+FLAG_IN tick 48 happened at 2025-06-20 10:37:07.575000
+FLAG_IN tick 49 happened at 2025-06-20 10:38:06.495000
+FLAG_IN tick 50 happened at 2025-06-20 10:40:52.188000
+FLAG_IN tick 51 happened at 2025-06-20 10:42:39.643000
+FLAG_IN tick 52 happened at 2025-06-20 10:44:19.006000
+FLAG_IN tick 53 happened at 2025-06-20 10:46:02.503000
+FLAG_IN tick 54 happened at 2025-06-20 10:48:19.633000
+FLAG_IN tick 55 happened at 2025-06-20 10:50:09.299000
+FLAG_IN tick 55 happened at 2025-06-20 10:50:09.299000
+Multiple FLAG_IN at tick 55
+FLAG_IN tick 56 happened at 2025-06-20 10:53:16.707000
+FLAG_IN tick 57 happened at 2025-06-20 10:54:38.453000
+FLAG_IN tick 58 happened at 2025-06-20 10:57:18.479000
+FLAG_IN tick 59 happened at 2025-06-20 10:58:12.232000
+FLAG_IN tick 60 happened at 2025-06-20 11:01:18.531000
+FLAG_IN tick 61 happened at 2025-06-20 11:02:14.758000
+FLAG_IN tick 62 happened at 2025-06-20 11:05:21.507000
+FLAG_IN tick 63 happened at 2025-06-20 11:07:18.536000
+No FLAG_IN at tick 64
+FLAG_IN tick 65 happened at 2025-06-20 11:11:19.976000
+FLAG_IN tick 66 happened at 2025-06-20 11:12:54.637000
+FLAG_IN tick 67 happened at 2025-06-20 11:15:22.102000
+FLAG_IN tick 68 happened at 2025-06-20 11:16:26.340000
+FLAG_IN tick 69 happened at 2025-06-20 11:19:04.250000
+No FLAG_IN at tick 70
+No FLAG_IN at tick 71
+No FLAG_IN at tick 72
+FLAG_IN tick 73 happened at 2025-06-20 11:26:06.253000
+No FLAG_IN at tick 74
+FLAG_IN tick 75 happened at 2025-06-20 11:31:21.262000
+FLAG_IN tick 76 happened at 2025-06-20 11:32:35.128000
+FLAG_IN tick 77 happened at 2025-06-20 11:34:08.801000
+FLAG_IN tick 78 happened at 2025-06-20 11:36:49.521000
+FLAG_IN tick 79 happened at 2025-06-20 11:38:45.301000
+FLAG_IN tick 80 happened at 2025-06-20 11:41:19.962000
+FLAG_IN tick 81 happened at 2025-06-20 11:42:59.083000
+FLAG_IN tick 82 happened at 2025-06-20 11:44:46.152000
+FLAG_IN tick 83 happened at 2025-06-20 11:46:46.681000
+FLAG_IN tick 84 happened at 2025-06-20 11:48:11.548000
+FLAG_IN tick 85 happened at 2025-06-20 11:50:03.216000
+FLAG_IN tick 86 happened at 2025-06-20 11:53:22.943000
+FLAG_IN tick 87 happened at 2025-06-20 11:54:03.769000
+FLAG_IN tick 88 happened at 2025-06-20 11:56:03.030000
+FLAG_IN tick 89 happened at 2025-06-20 11:58:42.985000
+FLAG_IN tick 90 happened at 2025-06-20 12:00:31.541000
+FLAG_IN tick 91 happened at 2025-06-20 12:02:41.560000
+FLAG_IN tick 92 happened at 2025-06-20 12:04:37.714000
+FLAG_IN tick 93 happened at 2025-06-20 12:07:18.364000
+FLAG_IN tick 94 happened at 2025-06-20 12:08:58.186000
+FLAG_IN tick 95 happened at 2025-06-20 12:10:53.391000
+FLAG_IN tick 96 happened at 2025-06-20 12:12:22.186000
+FLAG_IN tick 97 happened at 2025-06-20 12:14:56.215000
+FLAG_IN tick 98 happened at 2025-06-20 12:17:21.424000
+FLAG_IN tick 99 happened at 2025-06-20 12:18:50.160000
+FLAG_IN tick 100 happened at 2025-06-20 12:20:17.705000
+FLAG_IN tick 101 happened at 2025-06-20 12:22:23.170000
+FLAG_IN tick 102 happened at 2025-06-20 12:24:58.880000
+FLAG_IN tick 103 happened at 2025-06-20 12:26:03.531000
+FLAG_IN tick 104 happened at 2025-06-20 12:28:33.401000
+FLAG_IN tick 105 happened at 2025-06-20 12:31:17.418000
+FLAG_IN tick 106 happened at 2025-06-20 12:32:36.498000
+FLAG_IN tick 107 happened at 2025-06-20 12:34:20.777000
+FLAG_IN tick 108 happened at 2025-06-20 12:37:19.006000
+FLAG_IN tick 109 happened at 2025-06-20 12:39:01.067000
+FLAG_IN tick 109 happened at 2025-06-20 12:39:01.067000
+Multiple FLAG_IN at tick 109
+FLAG_IN tick 110 happened at 2025-06-20 12:41:21.087000
+FLAG_IN tick 111 happened at 2025-06-20 12:43:22.628000
+FLAG_IN tick 112 happened at 2025-06-20 12:44:16.644000
+FLAG_IN tick 113 happened at 2025-06-20 12:46:10.454000
+FLAG_IN tick 114 happened at 2025-06-20 12:49:05.342000
+FLAG_IN tick 115 happened at 2025-06-20 12:50:54.575000
+FLAG_IN tick 116 happened at 2025-06-20 12:53:00.210000
+FLAG_IN tick 117 happened at 2025-06-20 12:55:22.123000
+FLAG_IN tick 118 happened at 2025-06-20 12:56:04.505000
+FLAG_IN tick 119 happened at 2025-06-20 12:58:50.793000
+FLAG_IN tick 120 happened at 2025-06-20 13:00:04.119000
+FLAG_IN tick 121 happened at 2025-06-20 13:02:54.355000
+FLAG_IN tick 122 happened at 2025-06-20 13:04:04.571000
+FLAG_IN tick 123 happened at 2025-06-20 13:06:58.931000
+FLAG_IN tick 124 happened at 2025-06-20 13:08:22.382000
+FLAG_IN tick 125 happened at 2025-06-20 13:10:03.957000
+FLAG_IN tick 126 happened at 2025-06-20 13:13:05.491000
+FLAG_IN tick 127 happened at 2025-06-20 13:14:28.313000
+FLAG_IN tick 128 happened at 2025-06-20 13:17:18.423000
+FLAG_IN tick 129 happened at 2025-06-20 13:18:04.692000
+FLAG_IN tick 130 happened at 2025-06-20 13:20:46.826000
+No FLAG_IN at tick 131
+FLAG_IN tick 132 happened at 2025-06-20 13:24:42.842000
+FLAG_IN tick 133 happened at 2025-06-20 13:26:27.813000
+FLAG_IN tick 134 happened at 2025-06-20 13:28:42.509000
+FLAG_IN tick 135 happened at 2025-06-20 13:30:05.297000
+FLAG_IN tick 136 happened at 2025-06-20 13:33:22.158000
+FLAG_IN tick 137 happened at 2025-06-20 13:34:34.568000
+FLAG_IN tick 138 happened at 2025-06-20 13:36:05.061000
+FLAG_IN tick 139 happened at 2025-06-20 13:39:18.401000
+FLAG_IN tick 140 happened at 2025-06-20 13:40:48.686000
+FLAG_IN tick 141 happened at 2025-06-20 13:42:40.946000
+FLAG_IN tick 142 happened at 2025-06-20 13:44:05.252000
+FLAG_IN tick 143 happened at 2025-06-20 13:46:34.211000
+FLAG_IN tick 144 happened at 2025-06-20 13:48:09.008000
+FLAG_IN tick 145 happened at 2025-06-20 13:50:47.695000
+FLAG_IN tick 146 happened at 2025-06-20 13:53:04.665000
+FLAG_IN tick 147 happened at 2025-06-20 13:54:05.509000
+FLAG_IN tick 148 happened at 2025-06-20 13:56:52.419000
+FLAG_IN tick 149 happened at 2025-06-20 13:58:21.897000
+FLAG_IN tick 150 happened at 2025-06-20 14:00:04.806000
+FLAG_IN tick 151 happened at 2025-06-20 14:02:29.031000
+FLAG_IN tick 152 happened at 2025-06-20 14:04:07.571000
+FLAG_IN tick 153 happened at 2025-06-20 14:06:54.689000
+FLAG_IN tick 154 happened at 2025-06-20 14:08:10.656000
+FLAG_IN tick 155 happened at 2025-06-20 14:10:41.621000
+FLAG_IN tick 156 happened at 2025-06-20 14:12:39.851000
+FLAG_IN tick 157 happened at 2025-06-20 14:14:31.297000
+FLAG_IN tick 158 happened at 2025-06-20 14:16:38.983000
+FLAG_IN tick 159 happened at 2025-06-20 14:18:13.333000
+FLAG_IN tick 159 happened at 2025-06-20 14:18:13.333000
+Multiple FLAG_IN at tick 159
+FLAG_IN tick 160 happened at 2025-06-20 14:20:17.284000
+FLAG_IN tick 161 happened at 2025-06-20 14:23:19.256000
+FLAG_IN tick 162 happened at 2025-06-20 14:24:30.653000
+FLAG_IN tick 163 happened at 2025-06-20 14:26:26.642000
+FLAG_IN tick 164 happened at 2025-06-20 14:28:22.679000
+FLAG_IN tick 165 happened at 2025-06-20 14:30:05.141000
+FLAG_IN tick 166 happened at 2025-06-20 14:32:26.165000
+FLAG_IN tick 167 happened at 2025-06-20 14:34:05.641000
+FLAG_IN tick 168 happened at 2025-06-20 14:36:37.954000
+FLAG_IN tick 169 happened at 2025-06-20 14:38:33.847000
+FLAG_IN tick 170 happened at 2025-06-20 14:41:20.810000
+FLAG_IN tick 171 happened at 2025-06-20 14:43:13.053000
+FLAG_IN tick 172 happened at 2025-06-20 14:44:13.972000
+FLAG_IN tick 173 happened at 2025-06-20 14:46:36.202000
+FLAG_IN tick 174 happened at 2025-06-20 14:49:06.498000
+FLAG_IN tick 175 happened at 2025-06-20 14:50:06.030000
+FLAG_IN tick 176 happened at 2025-06-20 14:52:31.369000
+FLAG_IN tick 177 happened at 2025-06-20 14:54:27.450000
+FLAG_IN tick 178 happened at 2025-06-20 14:56:17.514000
+FLAG_IN tick 179 happened at 2025-06-20 14:58:06.209000
+FLAG_IN tick 180 happened at 2025-06-20 15:01:19.910000
+FLAG_IN tick 181 happened at 2025-06-20 15:03:00.139000
+FLAG_IN tick 182 happened at 2025-06-20 15:04:06.050000
+FLAG_IN tick 183 happened at 2025-06-20 15:06:20.779000
+FLAG_IN tick 184 happened at 2025-06-20 15:08:06.971000
+FLAG_IN tick 185 happened at 2025-06-20 15:10:05.878000
+FLAG_IN tick 186 happened at 2025-06-20 15:12:44.195000
+FLAG_IN tick 187 happened at 2025-06-20 15:14:16.825000
+FLAG_IN tick 188 happened at 2025-06-20 15:16:28.065000
+FLAG_IN tick 189 happened at 2025-06-20 15:19:03.536000
+FLAG_IN tick 190 happened at 2025-06-20 15:21:19.212000
+FLAG_IN tick 191 happened at 2025-06-20 15:22:26.466000
+FLAG_IN tick 192 happened at 2025-06-20 15:25:11.804000
+FLAG_IN tick 193 happened at 2025-06-20 15:26:06.879000
+FLAG_IN tick 194 happened at 2025-06-20 15:29:21.175000
+FLAG_IN tick 195 happened at 2025-06-20 15:30:57.498000
+FLAG_IN tick 196 happened at 2025-06-20 15:33:11.156000
+FLAG_IN tick 197 happened at 2025-06-20 15:34:27.610000
+FLAG_IN tick 198 happened at 2025-06-20 15:36:06.340000
+FLAG_IN tick 199 happened at 2025-06-20 15:39:21.734000
+FLAG_IN tick 200 happened at 2025-06-20 15:40:48.869000
+FLAG_IN tick 201 happened at 2025-06-20 15:42:42.096000
+FLAG_IN tick 202 happened at 2025-06-20 15:44:35.558000
+FLAG_IN tick 203 happened at 2025-06-20 15:46:42.027000
+FLAG_IN tick 204 happened at 2025-06-20 15:49:19.226000
+FLAG_IN tick 205 happened at 2025-06-20 15:50:07.153000
+FLAG_IN tick 206 happened at 2025-06-20 15:52:16.172000
+FLAG_IN tick 207 happened at 2025-06-20 15:55:20.462000
+FLAG_IN tick 208 happened at 2025-06-20 15:57:01.673000
+No FLAG_IN at tick 209
+No FLAG_IN at tick 210
+No FLAG_IN at tick 211
+No FLAG_IN at tick 212
+No FLAG_IN at tick 213
+No FLAG_IN at tick 214
+No FLAG_IN at tick 215
+No FLAG_IN at tick 216
+No FLAG_IN at tick 217
+No FLAG_IN at tick 218
+No FLAG_IN at tick 219
+No FLAG_IN at tick 220
+No FLAG_IN at tick 221
+No FLAG_IN at tick 222
+No FLAG_IN at tick 223
+No FLAG_IN at tick 224
+No FLAG_IN at tick 225
+No FLAG_IN at tick 226
+No FLAG_IN at tick 227
+No FLAG_IN at tick 228
+No FLAG_IN at tick 229
+No FLAG_IN at tick 230
+No FLAG_IN at tick 231
+No FLAG_IN at tick 232
+No FLAG_IN at tick 233
+No FLAG_IN at tick 234
+No FLAG_IN at tick 235
+No FLAG_IN at tick 236
+No FLAG_IN at tick 237
+No FLAG_IN at tick 238
+No FLAG_IN at tick 239
+Min time after tick start: 1.019 seconds.
+Max time after tick start: 82.943 seconds (1.0 minutes 22.942999999999998 seconds).
+No FLAG_OUT at tick 0
+FLAG_OUT happened at tick 1 and at 2025-06-20 09:03:06.664000
+FLAG_OUT happened at tick 2 and at 2025-06-20 09:05:21.291000
+FLAG_OUT happened at tick 2 and at 2025-06-20 09:04:01.303000
+Multiple FLAG_OUT at tick 2. There were 2
+FLAG_OUT happened at tick 3 and at 2025-06-20 09:06:58.839000
+FLAG_OUT happened at tick 3 and at 2025-06-20 09:06:03.121000
+FLAG_OUT happened at tick 3 and at 2025-06-20 09:06:02.892000
+Multiple FLAG_OUT at tick 3. There were 3
+FLAG_OUT happened at tick 4 and at 2025-06-20 09:09:20.106000
+FLAG_OUT happened at tick 4 and at 2025-06-20 09:08:49.671000
+FLAG_OUT happened at tick 4 and at 2025-06-20 09:08:20.730000
+FLAG_OUT happened at tick 4 and at 2025-06-20 09:08:04.322000
+Multiple FLAG_OUT at tick 4. There were 4
+FLAG_OUT happened at tick 5 and at 2025-06-20 09:11:12.686000
+FLAG_OUT happened at tick 5 and at 2025-06-20 09:11:04.179000
+FLAG_OUT happened at tick 5 and at 2025-06-20 09:10:56.525000
+FLAG_OUT happened at tick 5 and at 2025-06-20 09:10:35.836000
+FLAG_OUT happened at tick 5 and at 2025-06-20 09:10:18.527000
+Multiple FLAG_OUT at tick 5. There were 5
+FLAG_OUT happened at tick 6 and at 2025-06-20 09:13:18.301000
+FLAG_OUT happened at tick 6 and at 2025-06-20 09:12:50.733000
+FLAG_OUT happened at tick 6 and at 2025-06-20 09:12:33.079000
+FLAG_OUT happened at tick 6 and at 2025-06-20 09:12:03.065000
+FLAG_OUT happened at tick 6 and at 2025-06-20 09:12:02.355000
+Multiple FLAG_OUT at tick 6. There were 5
+FLAG_OUT happened at tick 7 and at 2025-06-20 09:15:02.700000
+FLAG_OUT happened at tick 7 and at 2025-06-20 09:15:02.007000
+FLAG_OUT happened at tick 7 and at 2025-06-20 09:14:20.251000
+FLAG_OUT happened at tick 7 and at 2025-06-20 09:14:18.757000
+FLAG_OUT happened at tick 7 and at 2025-06-20 09:14:02.540000
+Multiple FLAG_OUT at tick 7. There were 5
+FLAG_OUT happened at tick 8 and at 2025-06-20 09:17:22.650000
+FLAG_OUT happened at tick 8 and at 2025-06-20 09:16:52.499000
+FLAG_OUT happened at tick 8 and at 2025-06-20 09:16:25.596000
+FLAG_OUT happened at tick 8 and at 2025-06-20 09:16:25.523000
+FLAG_OUT happened at tick 8 and at 2025-06-20 09:16:02.620000
+Multiple FLAG_OUT at tick 8. There were 5
+FLAG_OUT happened at tick 9 and at 2025-06-20 09:18:54.013000
+FLAG_OUT happened at tick 9 and at 2025-06-20 09:18:34.269000
+FLAG_OUT happened at tick 9 and at 2025-06-20 09:18:24.425000
+FLAG_OUT happened at tick 9 and at 2025-06-20 09:18:24.425000
+FLAG_OUT happened at tick 9 and at 2025-06-20 09:18:14.390000
+FLAG_OUT happened at tick 9 and at 2025-06-20 09:18:01.593000
+Multiple FLAG_OUT at tick 9. There were 6
+FLAG_OUT happened at tick 10 and at 2025-06-20 09:21:19.555000
+FLAG_OUT happened at tick 10 and at 2025-06-20 09:20:49.321000
+FLAG_OUT happened at tick 10 and at 2025-06-20 09:20:36.523000
+FLAG_OUT happened at tick 10 and at 2025-06-20 09:20:01.487000
+FLAG_OUT happened at tick 10 and at 2025-06-20 09:20:01.824000
+Multiple FLAG_OUT at tick 10. There were 5
+FLAG_OUT happened at tick 11 and at 2025-06-20 09:23:18.571000
+FLAG_OUT happened at tick 11 and at 2025-06-20 09:22:48.956000
+FLAG_OUT happened at tick 11 and at 2025-06-20 09:22:35.286000
+FLAG_OUT happened at tick 11 and at 2025-06-20 09:22:04.828000
+FLAG_OUT happened at tick 11 and at 2025-06-20 09:22:01.416000
+Multiple FLAG_OUT at tick 11. There were 5
+FLAG_OUT happened at tick 12 and at 2025-06-20 09:25:21.461000
+FLAG_OUT happened at tick 12 and at 2025-06-20 09:25:19.977000
+FLAG_OUT happened at tick 12 and at 2025-06-20 09:24:31.797000
+FLAG_OUT happened at tick 12 and at 2025-06-20 09:24:20.671000
+FLAG_OUT happened at tick 12 and at 2025-06-20 09:24:04.446000
+Multiple FLAG_OUT at tick 12. There were 5
+FLAG_OUT happened at tick 13 and at 2025-06-20 09:27:21.128000
+FLAG_OUT happened at tick 13 and at 2025-06-20 09:27:01.514000
+FLAG_OUT happened at tick 13 and at 2025-06-20 09:26:38.303000
+FLAG_OUT happened at tick 13 and at 2025-06-20 09:26:38.018000
+FLAG_OUT happened at tick 13 and at 2025-06-20 09:26:15.491000
+Multiple FLAG_OUT at tick 13. There were 5
+FLAG_OUT happened at tick 14 and at 2025-06-20 09:29:22.147000
+FLAG_OUT happened at tick 14 and at 2025-06-20 09:29:13.953000
+FLAG_OUT happened at tick 14 and at 2025-06-20 09:29:12.185000
+FLAG_OUT happened at tick 14 and at 2025-06-20 09:28:49.302000
+FLAG_OUT happened at tick 14 and at 2025-06-20 09:28:19.204000
+Multiple FLAG_OUT at tick 14. There were 5
+FLAG_OUT happened at tick 15 and at 2025-06-20 09:30:47.646000
+FLAG_OUT happened at tick 15 and at 2025-06-20 09:30:36.276000
+FLAG_OUT happened at tick 15 and at 2025-06-20 09:30:33.695000
+FLAG_OUT happened at tick 15 and at 2025-06-20 09:30:29.960000
+FLAG_OUT happened at tick 15 and at 2025-06-20 09:30:06.320000
+Multiple FLAG_OUT at tick 15. There were 5
+FLAG_OUT happened at tick 16 and at 2025-06-20 09:33:08.980000
+FLAG_OUT happened at tick 16 and at 2025-06-20 09:33:07.356000
+FLAG_OUT happened at tick 16 and at 2025-06-20 09:32:54.411000
+FLAG_OUT happened at tick 16 and at 2025-06-20 09:32:29.546000
+FLAG_OUT happened at tick 16 and at 2025-06-20 09:32:06.791000
+Multiple FLAG_OUT at tick 16. There were 5
+FLAG_OUT happened at tick 17 and at 2025-06-20 09:35:22.269000
+FLAG_OUT happened at tick 17 and at 2025-06-20 09:35:15.744000
+FLAG_OUT happened at tick 17 and at 2025-06-20 09:35:13.541000
+FLAG_OUT happened at tick 17 and at 2025-06-20 09:34:33.930000
+Multiple FLAG_OUT at tick 17. There were 4
+FLAG_OUT happened at tick 18 and at 2025-06-20 09:37:19.617000
+FLAG_OUT happened at tick 18 and at 2025-06-20 09:36:38.996000
+FLAG_OUT happened at tick 18 and at 2025-06-20 09:36:34.237000
+FLAG_OUT happened at tick 18 and at 2025-06-20 09:36:23.471000
+FLAG_OUT happened at tick 18 and at 2025-06-20 09:36:07.617000
+Multiple FLAG_OUT at tick 18. There were 5
+FLAG_OUT happened at tick 19 and at 2025-06-20 09:39:08.980000
+FLAG_OUT happened at tick 19 and at 2025-06-20 09:39:01.959000
+FLAG_OUT happened at tick 19 and at 2025-06-20 09:38:20.125000
+FLAG_OUT happened at tick 19 and at 2025-06-20 09:38:20.125000
+FLAG_OUT happened at tick 19 and at 2025-06-20 09:38:01.580000
+FLAG_OUT happened at tick 19 and at 2025-06-20 09:38:01.625000
+Multiple FLAG_OUT at tick 19. There were 6
+FLAG_OUT happened at tick 20 and at 2025-06-20 09:41:14.112000
+FLAG_OUT happened at tick 20 and at 2025-06-20 09:41:11.815000
+FLAG_OUT happened at tick 20 and at 2025-06-20 09:40:59.461000
+FLAG_OUT happened at tick 20 and at 2025-06-20 09:40:57.197000
+FLAG_OUT happened at tick 20 and at 2025-06-20 09:40:07.693000
+Multiple FLAG_OUT at tick 20. There were 5
+FLAG_OUT happened at tick 21 and at 2025-06-20 09:43:02.254000
+FLAG_OUT happened at tick 21 and at 2025-06-20 09:42:44.409000
+FLAG_OUT happened at tick 21 and at 2025-06-20 09:42:13.826000
+FLAG_OUT happened at tick 21 and at 2025-06-20 09:42:11.370000
+FLAG_OUT happened at tick 21 and at 2025-06-20 09:42:07.665000
+Multiple FLAG_OUT at tick 21. There were 5
+FLAG_OUT happened at tick 22 and at 2025-06-20 09:45:55.142000
+FLAG_OUT happened at tick 22 and at 2025-06-20 09:45:55.784000
+FLAG_OUT happened at tick 22 and at 2025-06-20 09:45:54.366000
+FLAG_OUT happened at tick 22 and at 2025-06-20 09:45:53.068000
+FLAG_OUT happened at tick 22 and at 2025-06-20 09:45:53.775000
+FLAG_OUT happened at tick 22 and at 2025-06-20 09:45:22.246000
+FLAG_OUT happened at tick 22 and at 2025-06-20 09:44:50.493000
+FLAG_OUT happened at tick 22 and at 2025-06-20 09:44:40.218000
+FLAG_OUT happened at tick 22 and at 2025-06-20 09:44:39.494000
+FLAG_OUT happened at tick 22 and at 2025-06-20 09:44:38.760000
+FLAG_OUT happened at tick 22 and at 2025-06-20 09:44:38.096000
+FLAG_OUT happened at tick 22 and at 2025-06-20 09:44:37.418000
+FLAG_OUT happened at tick 22 and at 2025-06-20 09:44:20.734000
+FLAG_OUT happened at tick 22 and at 2025-06-20 09:44:16.609000
+FLAG_OUT happened at tick 22 and at 2025-06-20 09:44:04.293000
+Multiple FLAG_OUT at tick 22. There were 15
+FLAG_OUT happened at tick 23 and at 2025-06-20 09:47:49.770000
+FLAG_OUT happened at tick 23 and at 2025-06-20 09:47:49.272000
+FLAG_OUT happened at tick 23 and at 2025-06-20 09:47:48.614000
+FLAG_OUT happened at tick 23 and at 2025-06-20 09:47:47.411000
+FLAG_OUT happened at tick 23 and at 2025-06-20 09:47:47.977000
+FLAG_OUT happened at tick 23 and at 2025-06-20 09:46:37.073000
+FLAG_OUT happened at tick 23 and at 2025-06-20 09:46:35.518000
+FLAG_OUT happened at tick 23 and at 2025-06-20 09:46:25.853000
+FLAG_OUT happened at tick 23 and at 2025-06-20 09:46:09.363000
+FLAG_OUT happened at tick 23 and at 2025-06-20 09:46:08.134000
+Multiple FLAG_OUT at tick 23. There were 10
+FLAG_OUT happened at tick 24 and at 2025-06-20 09:49:12.638000
+FLAG_OUT happened at tick 24 and at 2025-06-20 09:48:53.540000
+FLAG_OUT happened at tick 24 and at 2025-06-20 09:48:51.412000
+FLAG_OUT happened at tick 24 and at 2025-06-20 09:48:50.865000
+FLAG_OUT happened at tick 24 and at 2025-06-20 09:48:50.259000
+FLAG_OUT happened at tick 24 and at 2025-06-20 09:48:49.726000
+FLAG_OUT happened at tick 24 and at 2025-06-20 09:48:49.143000
+FLAG_OUT happened at tick 24 and at 2025-06-20 09:48:22.484000
+FLAG_OUT happened at tick 24 and at 2025-06-20 09:48:04.986000
+FLAG_OUT happened at tick 24 and at 2025-06-20 09:48:03.451000
+Multiple FLAG_OUT at tick 24. There were 10
+FLAG_OUT happened at tick 25 and at 2025-06-20 09:51:10.736000
+FLAG_OUT happened at tick 25 and at 2025-06-20 09:50:55.636000
+FLAG_OUT happened at tick 25 and at 2025-06-20 09:50:54.119000
+FLAG_OUT happened at tick 25 and at 2025-06-20 09:50:54.748000
+FLAG_OUT happened at tick 25 and at 2025-06-20 09:50:53.464000
+FLAG_OUT happened at tick 25 and at 2025-06-20 09:50:52.777000
+FLAG_OUT happened at tick 25 and at 2025-06-20 09:50:52.143000
+FLAG_OUT happened at tick 25 and at 2025-06-20 09:50:38.294000
+FLAG_OUT happened at tick 25 and at 2025-06-20 09:50:17.282000
+FLAG_OUT happened at tick 25 and at 2025-06-20 09:50:17.282000
+FLAG_OUT happened at tick 25 and at 2025-06-20 09:50:01.665000
+Multiple FLAG_OUT at tick 25. There were 11
+FLAG_OUT happened at tick 26 and at 2025-06-20 09:53:23.142000
+FLAG_OUT happened at tick 26 and at 2025-06-20 09:53:08.184000
+FLAG_OUT happened at tick 26 and at 2025-06-20 09:53:07.953000
+FLAG_OUT happened at tick 26 and at 2025-06-20 09:52:30.423000
+FLAG_OUT happened at tick 26 and at 2025-06-20 09:52:02.152000
+Multiple FLAG_OUT at tick 26. There were 5
+FLAG_OUT happened at tick 27 and at 2025-06-20 09:55:04.964000
+FLAG_OUT happened at tick 27 and at 2025-06-20 09:54:53.878000
+FLAG_OUT happened at tick 27 and at 2025-06-20 09:54:03.980000
+FLAG_OUT happened at tick 27 and at 2025-06-20 09:54:01.804000
+Multiple FLAG_OUT at tick 27. There were 4
+FLAG_OUT happened at tick 28 and at 2025-06-20 09:57:19.330000
+FLAG_OUT happened at tick 28 and at 2025-06-20 09:57:05.182000
+FLAG_OUT happened at tick 28 and at 2025-06-20 09:57:03.352000
+FLAG_OUT happened at tick 28 and at 2025-06-20 09:57:01.904000
+FLAG_OUT happened at tick 28 and at 2025-06-20 09:57:00.623000
+FLAG_OUT happened at tick 28 and at 2025-06-20 09:56:59.060000
+FLAG_OUT happened at tick 28 and at 2025-06-20 09:56:52.107000
+FLAG_OUT happened at tick 28 and at 2025-06-20 09:56:41.898000
+FLAG_OUT happened at tick 28 and at 2025-06-20 09:56:11.856000
+FLAG_OUT happened at tick 28 and at 2025-06-20 09:56:06.440000
+Multiple FLAG_OUT at tick 28. There were 10
+FLAG_OUT happened at tick 29 and at 2025-06-20 09:59:19.153000
+FLAG_OUT happened at tick 29 and at 2025-06-20 09:59:15.026000
+FLAG_OUT happened at tick 29 and at 2025-06-20 09:59:11.452000
+FLAG_OUT happened at tick 29 and at 2025-06-20 09:59:04.841000
+FLAG_OUT happened at tick 29 and at 2025-06-20 09:58:52.241000
+FLAG_OUT happened at tick 29 and at 2025-06-20 09:58:50.659000
+FLAG_OUT happened at tick 29 and at 2025-06-20 09:58:47.388000
+FLAG_OUT happened at tick 29 and at 2025-06-20 09:58:04.549000
+Multiple FLAG_OUT at tick 29. There were 8
+FLAG_OUT happened at tick 30 and at 2025-06-20 10:01:45.657000
+FLAG_OUT happened at tick 30 and at 2025-06-20 10:01:44.957000
+FLAG_OUT happened at tick 30 and at 2025-06-20 10:01:44.214000
+FLAG_OUT happened at tick 30 and at 2025-06-20 10:01:43.507000
+FLAG_OUT happened at tick 30 and at 2025-06-20 10:01:41.775000
+FLAG_OUT happened at tick 30 and at 2025-06-20 10:01:20.762000
+FLAG_OUT happened at tick 30 and at 2025-06-20 10:01:15.328000
+FLAG_OUT happened at tick 30 and at 2025-06-20 10:01:00.600000
+FLAG_OUT happened at tick 30 and at 2025-06-20 10:00:27.865000
+FLAG_OUT happened at tick 30 and at 2025-06-20 10:00:12.587000
+Multiple FLAG_OUT at tick 30. There were 10
+FLAG_OUT happened at tick 31 and at 2025-06-20 10:03:45.918000
+FLAG_OUT happened at tick 31 and at 2025-06-20 10:03:45.217000
+FLAG_OUT happened at tick 31 and at 2025-06-20 10:03:44.517000
+FLAG_OUT happened at tick 31 and at 2025-06-20 10:03:43.820000
+FLAG_OUT happened at tick 31 and at 2025-06-20 10:03:42.717000
+FLAG_OUT happened at tick 31 and at 2025-06-20 10:02:58.585000
+FLAG_OUT happened at tick 31 and at 2025-06-20 10:02:56.970000
+FLAG_OUT happened at tick 31 and at 2025-06-20 10:02:55.340000
+FLAG_OUT happened at tick 31 and at 2025-06-20 10:02:53.238000
+FLAG_OUT happened at tick 31 and at 2025-06-20 10:02:51.281000
+FLAG_OUT happened at tick 31 and at 2025-06-20 10:02:18.425000
+FLAG_OUT happened at tick 31 and at 2025-06-20 10:02:17.484000
+FLAG_OUT happened at tick 31 and at 2025-06-20 10:02:12.860000
+FLAG_OUT happened at tick 31 and at 2025-06-20 10:02:09.086000
+FLAG_OUT happened at tick 31 and at 2025-06-20 10:02:08.349000
+FLAG_OUT happened at tick 31 and at 2025-06-20 10:02:07.584000
+FLAG_OUT happened at tick 31 and at 2025-06-20 10:02:06.695000
+FLAG_OUT happened at tick 31 and at 2025-06-20 10:02:06.695000
+FLAG_OUT happened at tick 31 and at 2025-06-20 10:02:05.801000
+FLAG_OUT happened at tick 31 and at 2025-06-20 10:02:02.598000
+FLAG_OUT happened at tick 31 and at 2025-06-20 10:02:01.758000
+Multiple FLAG_OUT at tick 31. There were 21
+FLAG_OUT happened at tick 32 and at 2025-06-20 10:05:49.070000
+FLAG_OUT happened at tick 32 and at 2025-06-20 10:05:48.374000
+FLAG_OUT happened at tick 32 and at 2025-06-20 10:05:47.697000
+FLAG_OUT happened at tick 32 and at 2025-06-20 10:05:46.990000
+FLAG_OUT happened at tick 32 and at 2025-06-20 10:05:46.231000
+FLAG_OUT happened at tick 32 and at 2025-06-20 10:05:05.306000
+FLAG_OUT happened at tick 32 and at 2025-06-20 10:05:05.435000
+FLAG_OUT happened at tick 32 and at 2025-06-20 10:05:03.169000
+FLAG_OUT happened at tick 32 and at 2025-06-20 10:05:00.162000
+FLAG_OUT happened at tick 32 and at 2025-06-20 10:04:59.879000
+FLAG_OUT happened at tick 32 and at 2025-06-20 10:04:59.044000
+FLAG_OUT happened at tick 32 and at 2025-06-20 10:04:58.250000
+FLAG_OUT happened at tick 32 and at 2025-06-20 10:04:57.615000
+FLAG_OUT happened at tick 32 and at 2025-06-20 10:04:57.398000
+FLAG_OUT happened at tick 32 and at 2025-06-20 10:04:56.551000
+FLAG_OUT happened at tick 32 and at 2025-06-20 10:04:55.706000
+FLAG_OUT happened at tick 32 and at 2025-06-20 10:04:51.011000
+FLAG_OUT happened at tick 32 and at 2025-06-20 10:04:50.251000
+FLAG_OUT happened at tick 32 and at 2025-06-20 10:04:50.746000
+FLAG_OUT happened at tick 32 and at 2025-06-20 10:04:31.214000
+Multiple FLAG_OUT at tick 32. There were 20
+FLAG_OUT happened at tick 33 and at 2025-06-20 10:07:44.597000
+FLAG_OUT happened at tick 33 and at 2025-06-20 10:07:43.824000
+FLAG_OUT happened at tick 33 and at 2025-06-20 10:07:43.115000
+FLAG_OUT happened at tick 33 and at 2025-06-20 10:07:42.377000
+FLAG_OUT happened at tick 33 and at 2025-06-20 10:07:41.637000
+FLAG_OUT happened at tick 33 and at 2025-06-20 10:07:41.637000
+FLAG_OUT happened at tick 33 and at 2025-06-20 10:07:34.208000
+FLAG_OUT happened at tick 33 and at 2025-06-20 10:07:25.757000
+FLAG_OUT happened at tick 33 and at 2025-06-20 10:07:19.950000
+FLAG_OUT happened at tick 33 and at 2025-06-20 10:06:59.961000
+FLAG_OUT happened at tick 33 and at 2025-06-20 10:06:59.112000
+FLAG_OUT happened at tick 33 and at 2025-06-20 10:06:58.177000
+FLAG_OUT happened at tick 33 and at 2025-06-20 10:06:57.492000
+FLAG_OUT happened at tick 33 and at 2025-06-20 10:06:57.306000
+FLAG_OUT happened at tick 33 and at 2025-06-20 10:06:56.431000
+FLAG_OUT happened at tick 33 and at 2025-06-20 10:06:48.604000
+FLAG_OUT happened at tick 33 and at 2025-06-20 10:06:43.180000
+FLAG_OUT happened at tick 33 and at 2025-06-20 10:06:35.169000
+Multiple FLAG_OUT at tick 33. There were 18
+FLAG_OUT happened at tick 34 and at 2025-06-20 10:09:50.238000
+FLAG_OUT happened at tick 34 and at 2025-06-20 10:09:50.907000
+FLAG_OUT happened at tick 34 and at 2025-06-20 10:09:49.365000
+FLAG_OUT happened at tick 34 and at 2025-06-20 10:09:48.705000
+FLAG_OUT happened at tick 34 and at 2025-06-20 10:09:47.983000
+FLAG_OUT happened at tick 34 and at 2025-06-20 10:09:12.405000
+FLAG_OUT happened at tick 34 and at 2025-06-20 10:09:11.649000
+FLAG_OUT happened at tick 34 and at 2025-06-20 10:09:10.248000
+FLAG_OUT happened at tick 34 and at 2025-06-20 10:09:06.139000
+FLAG_OUT happened at tick 34 and at 2025-06-20 10:09:00.358000
+FLAG_OUT happened at tick 34 and at 2025-06-20 10:08:59.492000
+FLAG_OUT happened at tick 34 and at 2025-06-20 10:08:58.512000
+FLAG_OUT happened at tick 34 and at 2025-06-20 10:08:57.646000
+FLAG_OUT happened at tick 34 and at 2025-06-20 10:08:56.791000
+FLAG_OUT happened at tick 34 and at 2025-06-20 10:08:55.317000
+FLAG_OUT happened at tick 34 and at 2025-06-20 10:08:54.416000
+FLAG_OUT happened at tick 34 and at 2025-06-20 10:08:52.413000
+FLAG_OUT happened at tick 34 and at 2025-06-20 10:08:51.754000
+FLAG_OUT happened at tick 34 and at 2025-06-20 10:08:51.086000
+Multiple FLAG_OUT at tick 34. There were 19
+FLAG_OUT happened at tick 35 and at 2025-06-20 10:11:59.565000
+FLAG_OUT happened at tick 35 and at 2025-06-20 10:11:58.464000
+FLAG_OUT happened at tick 35 and at 2025-06-20 10:11:57.672000
+FLAG_OUT happened at tick 35 and at 2025-06-20 10:11:56.791000
+FLAG_OUT happened at tick 35 and at 2025-06-20 10:11:44.770000
+FLAG_OUT happened at tick 35 and at 2025-06-20 10:11:44.004000
+FLAG_OUT happened at tick 35 and at 2025-06-20 10:11:43.227000
+FLAG_OUT happened at tick 35 and at 2025-06-20 10:11:42.554000
+FLAG_OUT happened at tick 35 and at 2025-06-20 10:11:41.808000
+FLAG_OUT happened at tick 35 and at 2025-06-20 10:11:32.211000
+FLAG_OUT happened at tick 35 and at 2025-06-20 10:11:24.393000
+FLAG_OUT happened at tick 35 and at 2025-06-20 10:11:19.078000
+FLAG_OUT happened at tick 35 and at 2025-06-20 10:11:19.903000
+FLAG_OUT happened at tick 35 and at 2025-06-20 10:11:09.491000
+FLAG_OUT happened at tick 35 and at 2025-06-20 10:11:01.436000
+FLAG_OUT happened at tick 35 and at 2025-06-20 10:10:51.187000
+FLAG_OUT happened at tick 35 and at 2025-06-20 10:10:10.244000
+FLAG_OUT happened at tick 35 and at 2025-06-20 10:10:09.667000
+FLAG_OUT happened at tick 35 and at 2025-06-20 10:10:09.552000
+Multiple FLAG_OUT at tick 35. There were 19
+FLAG_OUT happened at tick 36 and at 2025-06-20 10:13:07.908000
+FLAG_OUT happened at tick 36 and at 2025-06-20 10:13:07.147000
+FLAG_OUT happened at tick 36 and at 2025-06-20 10:13:05.393000
+FLAG_OUT happened at tick 36 and at 2025-06-20 10:13:04.656000
+FLAG_OUT happened at tick 36 and at 2025-06-20 10:13:04.010000
+FLAG_OUT happened at tick 36 and at 2025-06-20 10:13:01.051000
+FLAG_OUT happened at tick 36 and at 2025-06-20 10:13:01.764000
+FLAG_OUT happened at tick 36 and at 2025-06-20 10:13:01.286000
+FLAG_OUT happened at tick 36 and at 2025-06-20 10:13:00.092000
+FLAG_OUT happened at tick 36 and at 2025-06-20 10:13:00.092000
+FLAG_OUT happened at tick 36 and at 2025-06-20 10:13:00.994000
+FLAG_OUT happened at tick 36 and at 2025-06-20 10:12:59.252000
+FLAG_OUT happened at tick 36 and at 2025-06-20 10:12:58.431000
+FLAG_OUT happened at tick 36 and at 2025-06-20 10:12:50.084000
+FLAG_OUT happened at tick 36 and at 2025-06-20 10:12:41.415000
+FLAG_OUT happened at tick 36 and at 2025-06-20 10:12:25.918000
+Multiple FLAG_OUT at tick 36. There were 16
+FLAG_OUT happened at tick 37 and at 2025-06-20 10:15:19.477000
+FLAG_OUT happened at tick 37 and at 2025-06-20 10:15:17.694000
+FLAG_OUT happened at tick 37 and at 2025-06-20 10:15:01.156000
+FLAG_OUT happened at tick 37 and at 2025-06-20 10:15:00.371000
+FLAG_OUT happened at tick 37 and at 2025-06-20 10:14:58.191000
+FLAG_OUT happened at tick 37 and at 2025-06-20 10:14:58.669000
+FLAG_OUT happened at tick 37 and at 2025-06-20 10:14:57.957000
+FLAG_OUT happened at tick 37 and at 2025-06-20 10:14:52.579000
+FLAG_OUT happened at tick 37 and at 2025-06-20 10:14:51.904000
+FLAG_OUT happened at tick 37 and at 2025-06-20 10:14:51.286000
+FLAG_OUT happened at tick 37 and at 2025-06-20 10:14:50.031000
+FLAG_OUT happened at tick 37 and at 2025-06-20 10:14:50.679000
+FLAG_OUT happened at tick 37 and at 2025-06-20 10:14:12.558000
+FLAG_OUT happened at tick 37 and at 2025-06-20 10:14:01.847000
+Multiple FLAG_OUT at tick 37. There were 14
+FLAG_OUT happened at tick 38 and at 2025-06-20 10:17:15.620000
+FLAG_OUT happened at tick 38 and at 2025-06-20 10:17:14.334000
+FLAG_OUT happened at tick 38 and at 2025-06-20 10:17:12.715000
+FLAG_OUT happened at tick 38 and at 2025-06-20 10:17:10.828000
+FLAG_OUT happened at tick 38 and at 2025-06-20 10:17:09.438000
+FLAG_OUT happened at tick 38 and at 2025-06-20 10:17:09.926000
+FLAG_OUT happened at tick 38 and at 2025-06-20 10:17:03.910000
+FLAG_OUT happened at tick 38 and at 2025-06-20 10:17:02.682000
+FLAG_OUT happened at tick 38 and at 2025-06-20 10:17:01.853000
+FLAG_OUT happened at tick 38 and at 2025-06-20 10:17:01.011000
+FLAG_OUT happened at tick 38 and at 2025-06-20 10:17:00.248000
+FLAG_OUT happened at tick 38 and at 2025-06-20 10:16:59.341000
+FLAG_OUT happened at tick 38 and at 2025-06-20 10:16:50.742000
+FLAG_OUT happened at tick 38 and at 2025-06-20 10:16:15.476000
+FLAG_OUT happened at tick 38 and at 2025-06-20 10:16:08.705000
+Multiple FLAG_OUT at tick 38. There were 15
+FLAG_OUT happened at tick 39 and at 2025-06-20 10:19:12.519000
+FLAG_OUT happened at tick 39 and at 2025-06-20 10:19:11.461000
+FLAG_OUT happened at tick 39 and at 2025-06-20 10:19:11.925000
+FLAG_OUT happened at tick 39 and at 2025-06-20 10:19:10.300000
+FLAG_OUT happened at tick 39 and at 2025-06-20 10:19:10.300000
+FLAG_OUT happened at tick 39 and at 2025-06-20 10:19:08.872000
+FLAG_OUT happened at tick 39 and at 2025-06-20 10:19:07.249000
+FLAG_OUT happened at tick 39 and at 2025-06-20 10:19:04.077000
+FLAG_OUT happened at tick 39 and at 2025-06-20 10:19:04.386000
+FLAG_OUT happened at tick 39 and at 2025-06-20 10:19:04.901000
+FLAG_OUT happened at tick 39 and at 2025-06-20 10:19:03.197000
+FLAG_OUT happened at tick 39 and at 2025-06-20 10:19:02.346000
+FLAG_OUT happened at tick 39 and at 2025-06-20 10:19:01.536000
+FLAG_OUT happened at tick 39 and at 2025-06-20 10:18:53.206000
+FLAG_OUT happened at tick 39 and at 2025-06-20 10:18:42.685000
+FLAG_OUT happened at tick 39 and at 2025-06-20 10:18:02.107000
+Multiple FLAG_OUT at tick 39. There were 16
+FLAG_OUT happened at tick 40 and at 2025-06-20 10:21:24.662000
+FLAG_OUT happened at tick 40 and at 2025-06-20 10:21:23.613000
+FLAG_OUT happened at tick 40 and at 2025-06-20 10:21:22.708000
+FLAG_OUT happened at tick 40 and at 2025-06-20 10:21:21.504000
+FLAG_OUT happened at tick 40 and at 2025-06-20 10:21:20.158000
+FLAG_OUT happened at tick 40 and at 2025-06-20 10:21:17.478000
+FLAG_OUT happened at tick 40 and at 2025-06-20 10:21:04.338000
+FLAG_OUT happened at tick 40 and at 2025-06-20 10:21:03.577000
+FLAG_OUT happened at tick 40 and at 2025-06-20 10:21:02.752000
+FLAG_OUT happened at tick 40 and at 2025-06-20 10:21:01.952000
+FLAG_OUT happened at tick 40 and at 2025-06-20 10:21:01.067000
+FLAG_OUT happened at tick 40 and at 2025-06-20 10:20:19.391000
+FLAG_OUT happened at tick 40 and at 2025-06-20 10:20:14.477000
+FLAG_OUT happened at tick 40 and at 2025-06-20 10:20:11.147000
+FLAG_OUT happened at tick 40 and at 2025-06-20 10:20:02.024000
+Multiple FLAG_OUT at tick 40. There were 15
+FLAG_OUT happened at tick 41 and at 2025-06-20 10:23:22.307000
+FLAG_OUT happened at tick 41 and at 2025-06-20 10:23:05.500000
+FLAG_OUT happened at tick 41 and at 2025-06-20 10:23:04.051000
+FLAG_OUT happened at tick 41 and at 2025-06-20 10:23:04.811000
+FLAG_OUT happened at tick 41 and at 2025-06-20 10:23:03.240000
+FLAG_OUT happened at tick 41 and at 2025-06-20 10:23:02.447000
+FLAG_OUT happened at tick 41 and at 2025-06-20 10:23:01.358000
+FLAG_OUT happened at tick 41 and at 2025-06-20 10:23:00.089000
+FLAG_OUT happened at tick 41 and at 2025-06-20 10:23:00.696000
+FLAG_OUT happened at tick 41 and at 2025-06-20 10:22:59.324000
+FLAG_OUT happened at tick 41 and at 2025-06-20 10:22:58.759000
+FLAG_OUT happened at tick 41 and at 2025-06-20 10:22:51.120000
+FLAG_OUT happened at tick 41 and at 2025-06-20 10:22:43.919000
+FLAG_OUT happened at tick 41 and at 2025-06-20 10:22:03.755000
+FLAG_OUT happened at tick 41 and at 2025-06-20 10:22:01.882000
+Multiple FLAG_OUT at tick 41. There were 15
+FLAG_OUT happened at tick 42 and at 2025-06-20 10:25:22.205000
+FLAG_OUT happened at tick 42 and at 2025-06-20 10:25:08.727000
+FLAG_OUT happened at tick 42 and at 2025-06-20 10:25:07.907000
+FLAG_OUT happened at tick 42 and at 2025-06-20 10:25:07.153000
+FLAG_OUT happened at tick 42 and at 2025-06-20 10:25:06.291000
+FLAG_OUT happened at tick 42 and at 2025-06-20 10:25:05.479000
+FLAG_OUT happened at tick 42 and at 2025-06-20 10:25:03.322000
+FLAG_OUT happened at tick 42 and at 2025-06-20 10:25:01.330000
+FLAG_OUT happened at tick 42 and at 2025-06-20 10:24:59.067000
+FLAG_OUT happened at tick 42 and at 2025-06-20 10:24:59.373000
+FLAG_OUT happened at tick 42 and at 2025-06-20 10:24:57.884000
+FLAG_OUT happened at tick 42 and at 2025-06-20 10:24:56.650000
+FLAG_OUT happened at tick 42 and at 2025-06-20 10:24:27.228000
+FLAG_OUT happened at tick 42 and at 2025-06-20 10:24:09.678000
+FLAG_OUT happened at tick 42 and at 2025-06-20 10:24:03.972000
+Multiple FLAG_OUT at tick 42. There were 15
+FLAG_OUT happened at tick 43 and at 2025-06-20 10:27:09.218000
+FLAG_OUT happened at tick 43 and at 2025-06-20 10:27:08.414000
+FLAG_OUT happened at tick 43 and at 2025-06-20 10:27:08.410000
+FLAG_OUT happened at tick 43 and at 2025-06-20 10:27:07.605000
+FLAG_OUT happened at tick 43 and at 2025-06-20 10:27:06.641000
+FLAG_OUT happened at tick 43 and at 2025-06-20 10:27:05.738000
+FLAG_OUT happened at tick 43 and at 2025-06-20 10:27:02.952000
+FLAG_OUT happened at tick 43 and at 2025-06-20 10:26:59.359000
+FLAG_OUT happened at tick 43 and at 2025-06-20 10:26:58.562000
+FLAG_OUT happened at tick 43 and at 2025-06-20 10:26:57.845000
+FLAG_OUT happened at tick 43 and at 2025-06-20 10:26:57.854000
+FLAG_OUT happened at tick 43 and at 2025-06-20 10:26:56.277000
+FLAG_OUT happened at tick 43 and at 2025-06-20 10:26:56.976000
+FLAG_OUT happened at tick 43 and at 2025-06-20 10:26:51.737000
+FLAG_OUT happened at tick 43 and at 2025-06-20 10:26:06.803000
+FLAG_OUT happened at tick 43 and at 2025-06-20 10:26:06.803000
+Multiple FLAG_OUT at tick 43. There were 16
+FLAG_OUT happened at tick 44 and at 2025-06-20 10:29:19.859000
+FLAG_OUT happened at tick 44 and at 2025-06-20 10:29:12.536000
+FLAG_OUT happened at tick 44 and at 2025-06-20 10:29:11.745000
+FLAG_OUT happened at tick 44 and at 2025-06-20 10:29:10.910000
+FLAG_OUT happened at tick 44 and at 2025-06-20 10:29:10.164000
+FLAG_OUT happened at tick 44 and at 2025-06-20 10:29:09.346000
+FLAG_OUT happened at tick 44 and at 2025-06-20 10:29:00.372000
+FLAG_OUT happened at tick 44 and at 2025-06-20 10:28:59.283000
+FLAG_OUT happened at tick 44 and at 2025-06-20 10:28:58.740000
+FLAG_OUT happened at tick 44 and at 2025-06-20 10:28:58.115000
+FLAG_OUT happened at tick 44 and at 2025-06-20 10:28:57.503000
+FLAG_OUT happened at tick 44 and at 2025-06-20 10:28:56.957000
+FLAG_OUT happened at tick 44 and at 2025-06-20 10:28:18.767000
+FLAG_OUT happened at tick 44 and at 2025-06-20 10:28:17.906000
+FLAG_OUT happened at tick 44 and at 2025-06-20 10:28:14.331000
+Multiple FLAG_OUT at tick 44. There were 15
+FLAG_OUT happened at tick 45 and at 2025-06-20 10:31:23.021000
+FLAG_OUT happened at tick 45 and at 2025-06-20 10:31:18.627000
+FLAG_OUT happened at tick 45 and at 2025-06-20 10:31:18.911000
+FLAG_OUT happened at tick 45 and at 2025-06-20 10:31:13.543000
+FLAG_OUT happened at tick 45 and at 2025-06-20 10:31:12.684000
+FLAG_OUT happened at tick 45 and at 2025-06-20 10:31:11.967000
+FLAG_OUT happened at tick 45 and at 2025-06-20 10:31:11.095000
+FLAG_OUT happened at tick 45 and at 2025-06-20 10:31:10.330000
+FLAG_OUT happened at tick 45 and at 2025-06-20 10:31:10.816000
+FLAG_OUT happened at tick 45 and at 2025-06-20 10:30:58.797000
+FLAG_OUT happened at tick 45 and at 2025-06-20 10:30:58.160000
+FLAG_OUT happened at tick 45 and at 2025-06-20 10:30:57.601000
+FLAG_OUT happened at tick 45 and at 2025-06-20 10:30:56.961000
+FLAG_OUT happened at tick 45 and at 2025-06-20 10:30:56.333000
+FLAG_OUT happened at tick 45 and at 2025-06-20 10:30:02.262000
+Multiple FLAG_OUT at tick 45. There were 15
+FLAG_OUT happened at tick 46 and at 2025-06-20 10:33:20.679000
+FLAG_OUT happened at tick 46 and at 2025-06-20 10:33:19.883000
+FLAG_OUT happened at tick 46 and at 2025-06-20 10:33:15.111000
+FLAG_OUT happened at tick 46 and at 2025-06-20 10:33:15.909000
+FLAG_OUT happened at tick 46 and at 2025-06-20 10:33:14.296000
+FLAG_OUT happened at tick 46 and at 2025-06-20 10:33:13.478000
+FLAG_OUT happened at tick 46 and at 2025-06-20 10:33:12.668000
+FLAG_OUT happened at tick 46 and at 2025-06-20 10:32:58.716000
+FLAG_OUT happened at tick 46 and at 2025-06-20 10:32:57.041000
+FLAG_OUT happened at tick 46 and at 2025-06-20 10:32:57.774000
+FLAG_OUT happened at tick 46 and at 2025-06-20 10:32:56.360000
+FLAG_OUT happened at tick 46 and at 2025-06-20 10:32:56.360000
+FLAG_OUT happened at tick 46 and at 2025-06-20 10:32:55.765000
+FLAG_OUT happened at tick 46 and at 2025-06-20 10:32:31.918000
+FLAG_OUT happened at tick 46 and at 2025-06-20 10:32:12.262000
+FLAG_OUT happened at tick 46 and at 2025-06-20 10:32:02.333000
+Multiple FLAG_OUT at tick 46. There were 16
+FLAG_OUT happened at tick 47 and at 2025-06-20 10:35:17.892000
+FLAG_OUT happened at tick 47 and at 2025-06-20 10:35:17.122000
+FLAG_OUT happened at tick 47 and at 2025-06-20 10:35:16.244000
+FLAG_OUT happened at tick 47 and at 2025-06-20 10:35:15.403000
+FLAG_OUT happened at tick 47 and at 2025-06-20 10:35:14.622000
+FLAG_OUT happened at tick 47 and at 2025-06-20 10:35:07.556000
+FLAG_OUT happened at tick 47 and at 2025-06-20 10:35:03.394000
+FLAG_OUT happened at tick 47 and at 2025-06-20 10:35:00.014000
+FLAG_OUT happened at tick 47 and at 2025-06-20 10:34:58.211000
+FLAG_OUT happened at tick 47 and at 2025-06-20 10:34:58.989000
+FLAG_OUT happened at tick 47 and at 2025-06-20 10:34:56.045000
+FLAG_OUT happened at tick 47 and at 2025-06-20 10:34:51.306000
+FLAG_OUT happened at tick 47 and at 2025-06-20 10:34:30.811000
+FLAG_OUT happened at tick 47 and at 2025-06-20 10:34:19.789000
+FLAG_OUT happened at tick 47 and at 2025-06-20 10:34:03.697000
+Multiple FLAG_OUT at tick 47. There were 15
+FLAG_OUT happened at tick 48 and at 2025-06-20 10:37:20.648000
+FLAG_OUT happened at tick 48 and at 2025-06-20 10:37:19.682000
+FLAG_OUT happened at tick 48 and at 2025-06-20 10:37:18.429000
+FLAG_OUT happened at tick 48 and at 2025-06-20 10:37:18.843000
+FLAG_OUT happened at tick 48 and at 2025-06-20 10:37:17.991000
+FLAG_OUT happened at tick 48 and at 2025-06-20 10:37:17.038000
+FLAG_OUT happened at tick 48 and at 2025-06-20 10:37:01.405000
+FLAG_OUT happened at tick 48 and at 2025-06-20 10:37:00.352000
+FLAG_OUT happened at tick 48 and at 2025-06-20 10:36:58.876000
+FLAG_OUT happened at tick 48 and at 2025-06-20 10:36:56.262000
+FLAG_OUT happened at tick 48 and at 2025-06-20 10:36:55.198000
+FLAG_OUT happened at tick 48 and at 2025-06-20 10:36:50.739000
+FLAG_OUT happened at tick 48 and at 2025-06-20 10:36:46.675000
+FLAG_OUT happened at tick 48 and at 2025-06-20 10:36:14.205000
+FLAG_OUT happened at tick 48 and at 2025-06-20 10:36:05.130000
+Multiple FLAG_OUT at tick 48. There were 15
+FLAG_OUT happened at tick 49 and at 2025-06-20 10:39:22.510000
+FLAG_OUT happened at tick 49 and at 2025-06-20 10:39:21.759000
+FLAG_OUT happened at tick 49 and at 2025-06-20 10:39:20.146000
+FLAG_OUT happened at tick 49 and at 2025-06-20 10:39:20.941000
+FLAG_OUT happened at tick 49 and at 2025-06-20 10:39:19.306000
+FLAG_OUT happened at tick 49 and at 2025-06-20 10:39:15.254000
+FLAG_OUT happened at tick 49 and at 2025-06-20 10:39:11.670000
+FLAG_OUT happened at tick 49 and at 2025-06-20 10:39:11.670000
+FLAG_OUT happened at tick 49 and at 2025-06-20 10:39:04.262000
+FLAG_OUT happened at tick 49 and at 2025-06-20 10:38:59.632000
+FLAG_OUT happened at tick 49 and at 2025-06-20 10:38:58.694000
+FLAG_OUT happened at tick 49 and at 2025-06-20 10:38:57.627000
+FLAG_OUT happened at tick 49 and at 2025-06-20 10:38:56.519000
+FLAG_OUT happened at tick 49 and at 2025-06-20 10:38:55.331000
+FLAG_OUT happened at tick 49 and at 2025-06-20 10:38:51.443000
+FLAG_OUT happened at tick 49 and at 2025-06-20 10:38:49.458000
+Multiple FLAG_OUT at tick 49. There were 16
+
+Compilation finished at mer ott 28 21:24:13, duration 2.80 s
