@@ -12,14 +12,14 @@ def main():
     logger = get_logger("Orchestrator")
 
     checker_configs: list[str] = [
-        #"../CyberChallenge.IT-AD-2024/checkers/CCForms-1",
-        #"../CyberChallenge.IT-AD-2024/checkers/CCForms-2",
-        #"../CyberChallenge.IT-AD-2024/checkers/ExCCel-1/",
-        #"../CyberChallenge.IT-AD-2024/checkers/ExCCel-2/",
-        #"../CyberChallenge.IT-AD-2024/checkers/CCalendar-1/",
+        "../CyberChallenge.IT-AD-2024/checkers/CCForms-1",
+        "../CyberChallenge.IT-AD-2024/checkers/CCForms-2",
+        "../CyberChallenge.IT-AD-2024/checkers/ExCCel-1/",
+        "../CyberChallenge.IT-AD-2024/checkers/ExCCel-2/",
+        "../CyberChallenge.IT-AD-2024/checkers/CCalendar-1/",
         "../CyberChallenge.IT-AD-2024/checkers/CCalendar-2/",
-        #"../CyberChallenge.IT-AD-2024/checkers/Inlook-1/",
-        #"../CyberChallenge.IT-AD-2024/checkers/Inlook-2/",
+        "../CyberChallenge.IT-AD-2024/checkers/Inlook-1/",
+        "../CyberChallenge.IT-AD-2024/checkers/Inlook-2/",
     ]
 
     checkers: list[Checker] = []
@@ -28,8 +28,8 @@ def main():
         checkers.append(Checker(path))
 
     ROUNDS = 10
-    ROUND_TIME = 20  # Seconds
-    TEAMS = 1
+    ROUND_TIME = 150 # Seconds
+    TEAMS = 3
 
     # NOTE: Figure out a better way to handle the timing? Currently goes around 0.000270 seconds faster than real time.
     for nround in range(ROUNDS):

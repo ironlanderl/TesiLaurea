@@ -1,14 +1,18 @@
 import json
+import os
 from pprint import pprint
 from typing import Any
 from flask import Flask, request
 import logging
+from dotenv import load_dotenv
+
+load_dotenv()
 
 logger = logging.basicConfig(level=logging.DEBUG)
 
 app = Flask(__name__)
 app.config["DEBUG"] = True
-app_token = "5774A8F69DDEC6C954D2CBBDE2B5A7EF"
+app_token = os.getenv("APP_TOKEN") 
 state = {}
 
 @app.route("/postFlagId", methods = ["POST"])
@@ -19,8 +23,6 @@ def postFlagId():
 
 
     data = request.get_json()
-
-    print(f"{data=}")
 
     token: str = data["token"]
     if token != app_token:
@@ -35,16 +37,29 @@ def postFlagId():
     state[service_id].setdefault(team_id, {})
     state[service_id][team_id].setdefault(round_id, flag_id)
 
-    pprint(state)
     return "ok", 200
 
 @app.route("/flagIds", methods = ["GET"])
 def flagIds():
     global state
     service_id: str = request.args.get("service", '')
-    team_id: int = int(request.args.get("team", 0))
-    round_id: int = int(request.args.get("round", 0))
+    team_id: int = int(request.args.get("team", -1))
+    round_id: int = int(request.args.get("round", -1))
 
     # TODO: Implement filters
 
     return json.dumps(state), {"Content-Type": "application/json"}
+
+@app.route("/", methods = ["GET"])
+def root():
+    global state
+
+    try:
+        services = list(state.keys())
+        teams = list(state[services[0]].keys())
+        valid_ticks = list(state[services[0]][teams[0]].keys())[-5:]
+    except Exception as e:
+        return str(e), 500
+
+
+    return {"services": services, "teams": teams, "ticks": valid_ticks}
