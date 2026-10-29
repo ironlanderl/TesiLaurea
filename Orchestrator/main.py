@@ -34,8 +34,8 @@ def main():
 
     checkers: list[Checker] = []
 
-    for path in checker_configs:
-        checkers.append(Checker(path))
+    for i, path in enumerate(checker_configs):
+        checkers.append(Checker(path, i))
 
     scheduler = Scheduler(checkers)
 

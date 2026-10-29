@@ -16,7 +16,7 @@ class Checker:
         path (str): Path to the base dir of the checker
     """
 
-    def __init__(self, path: str) -> None:
+    def __init__(self, path: str, service_number: int) -> None:
 
         json_file = f"{path}/checker.json"
 
@@ -30,6 +30,8 @@ class Checker:
         self.SLA_timeout: int = data["timeout"]["CHECK_SLA"] / 1000
         self.PUT_timeout: int = data["timeout"]["PUT_FLAG"] / 1000
         self.GET_timeout: int = data["timeout"]["GET_FLAG"] / 1000
+
+        self.service_number = service_number
 
         self.status: dict[int, dict[int, dict[str, Status | str | None]]] = {}
 
@@ -198,7 +200,7 @@ class Checker:
             self.status[nround][team]["PUT"] = Status.CHECKER_DISABLED
             return
 
-        new_flag = generate_flag(team, nround)
+        new_flag = generate_flag(team, nround, self.service_number)
         self.status[nround][team]["flag"] = new_flag
 
         try:
@@ -211,8 +213,8 @@ class Checker:
                     "TEAM_ID": str(team),
                     "ROUND": str(nround),
                     "FLAG": new_flag,
-                    "FLAGID_SERVICE": "http://127.0.0.1:5000",  # TODO: Don't hardcode these
-                    "FLAGID_TOKEN": "5774A8F69DDEC6C954D2CBBDE2B5A7EF",
+                    "FLAGID_SERVICE": os.getenv("FLAGID_SERVICE"),
+                    "FLAGID_TOKEN": os.getenv("FLAGID_TOKEN"),
                 },
                 stderr=subprocess.STDOUT,
             )
