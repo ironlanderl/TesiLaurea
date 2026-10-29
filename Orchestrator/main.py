@@ -2,8 +2,10 @@ import json
 import os
 import time
 from datetime import datetime
+
 from checker import Checker
 from dotenv import load_dotenv
+from scheduler import Scheduler
 from utils import get_logger
 
 # TODO: Change how this works.
@@ -24,6 +26,9 @@ if not load_dotenv():
     os.environ["ROUND_TIME"] = str(120)
     os.environ["TEAMS"] = str(2)
 
+    os.environ["MIN_WAIT"] = str(1)
+    os.environ["MAX_WAIT"] = str(100)
+
 
 def main():
 
@@ -43,21 +48,17 @@ def main():
     for path in checker_configs:
         checkers.append(Checker(path))
 
+    scheduler = Scheduler(checkers)
+
     ROUNDS = int(os.getenv("ROUNDS"))
     ROUND_TIME = int(os.getenv("ROUND_TIME"))  # Seconds
-    TEAMS = int(os.getenv("TEAMS"))
 
     # NOTE: Figure out a better way to handle the timing? Currently goes around 0.000270 seconds faster than real time.
     for nround in range(ROUNDS):
         logger.info(f"Round {nround} started at {datetime.now().time()}")
         start_time = time.time_ns()
 
-        # NOTE: Might be useful to multithread at least the checkers. One round with a single team takes almost a minute by itself.
-        for checker in checkers:
-            for team in range(TEAMS):
-                checker.check_sla(team, nround)
-                checker.check_put(team, nround)
-                checker.check_get(team, nround)
+        scheduler.run(nround)
 
         end_time = time.time_ns()
 

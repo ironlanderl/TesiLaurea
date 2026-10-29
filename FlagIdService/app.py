@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+from threading import Lock
 from typing import Any
 
 from dotenv import load_dotenv
@@ -14,11 +15,11 @@ app = Flask(__name__)
 app.config["DEBUG"] = True
 app_token = os.getenv("APP_TOKEN")
 state = {}
+lock = Lock()
 
 
 @app.route("/postFlagId", methods=["POST"])
 def postFlagId():
-    global state
 
     print(f"{request.data}")
 
@@ -33,33 +34,33 @@ def postFlagId():
     round_id: int = data["round"]
     flag_id: Any = data["flagId"]
 
-    state.setdefault(service_id, {})
-    state[service_id].setdefault(team_id, {})
-    state[service_id][team_id].setdefault(round_id, flag_id)
+    with lock:
+        state.setdefault(service_id, {})
+        state[service_id].setdefault(team_id, {})
+        state[service_id][team_id].setdefault(round_id, flag_id)
 
     return "ok", 200
 
 
 @app.route("/flagIds", methods=["GET"])
 def flagIds():
-    global state
     service_id: str = request.args.get("service", "")
     team_id: int = int(request.args.get("team", -1))
     round_id: int = int(request.args.get("round", -1))
 
     # TODO: Implement filters
-
-    return json.dumps(state), {"Content-Type": "application/json"}
+    with lock:
+        return json.dumps(state), {"Content-Type": "application/json"}
 
 
 @app.route("/", methods=["GET"])
 def root():
-    global state
 
     try:
-        services = list(state.keys())
-        teams = list(state[services[0]].keys())
-        valid_ticks = list(state[services[0]][teams[0]].keys())[-5:]
+        with lock:
+            services = list(state.keys())
+            teams = list(state[services[0]].keys())
+            valid_ticks = list(state[services[0]][teams[0]].keys())[-5:]
     except Exception as e:
         return str(e), 500
 

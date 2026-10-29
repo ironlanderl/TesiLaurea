@@ -2,6 +2,7 @@ import json
 import os
 import pathlib
 import subprocess
+from threading import Lock
 from typing import override
 
 from utils import Action, Status, generate_flag, get_logger
@@ -34,6 +35,9 @@ class Checker:
 
         self.logger = get_logger(self.name)
 
+        self.init_lock = Lock()
+        self.get_lock = Lock()
+
     def check_sla(self, team: int, nround: int) -> None:
         """
         Checks the SLA status of the service
@@ -42,7 +46,6 @@ class Checker:
             team (int): zero indexed team number
             nround(int): zero indexed current tick number
         """
-        # Since sla is always checked first (for now at least), always have it initialize the round status dict
         self.__create_dict_data(team, nround)
         try:
             _ = subprocess.check_output(
@@ -65,22 +68,73 @@ class Checker:
                 self.logger.error(f"Invalid return code '{e.returncode}'. Text is {e.output}")
                 return
             self.logger.info(
-                f"Operation {Action.CHECK_SLA.name} returned error {e.returncode} with text {e.output}. Corresponds to {Status(e.returncode).name}"
+                f"Operation {Action.CHECK_SLA.name} for team {team} at tick {nround} returned error {e.returncode} with text {e.output}. Corresponds to {Status(e.returncode).name}"
             )
             self.status[nround][team]["SLA"] = Status(e.returncode)
         except Exception as e:
             self.logger.error(f"Generic exception happened: {e}")
 
+    def check_get_single(self, team: int, nround: int, flag: str) -> None:
+        """
+        Checks the ability to retrieve a specific flag from the system
+
+        Args:
+            team (int): zero indexed team number
+            nround(int): zero indexed current tick number
+            flag(str): the flag to check
+        """
+        self.__create_dict_data(team, nround)
+
+        # NOTE: The entire get operation is under lock
+        with self.get_lock:
+            # If down or Disabled, skip to save time
+            if self.status[nround][team]["GET"] in (Status.DOWN, Status.CHECKER_DISABLED):
+                return
+
+            if nround == 0:
+                self.logger.info("First tick. Skipping GET_CHECK")
+                self.status[nround][team]["GET"] = Status.CHECKER_DISABLED
+                return
+
+            try:
+                _ = subprocess.check_output(
+                    self.command.split(" "),
+                    cwd=self.path,
+                    timeout=self.GET_timeout,
+                    env={
+                        "ACTION": Action.GET_FLAG.name,
+                        "TEAM_ID": str(team),
+                        "ROUND": str(nround),
+                        "FLAG": flag,
+                    },
+                    stderr=subprocess.STDOUT,
+                )
+            except subprocess.CalledProcessError as e:
+                # Filter out eventual non compliant return values (such as -1)
+                if e.returncode not in Status:
+                    self.logger.error(f"Invalid return code '{e.returncode}'. Text is {e.output}")
+                    return
+                self.logger.info(
+                    f"Operation {Action.CHECK_SLA.name} for team {team} at tick {nround} returned error {e.returncode} with text {e.output}. Corresponds to {Status(e.returncode).name}"
+                )
+                self.status[nround][team]["GET"] = Status(e.returncode)
+
+            except subprocess.TimeoutExpired:
+                self.logger.info("Timeout expired")
+                self.status[nround][team]["GET"] = Status.DOWN
+
+            except Exception as e:
+                self.logger.error(f"Generic exception happened: {e}")
+
     def check_get(self, team: int, nround: int) -> None:
         """
-        Checks the ability to retrieve flags from the system
+        Checks the ability to retrieve the last five valid flags from the system
 
         Args:
             team (int): zero indexed team number
             nround(int): zero indexed current tick number
         """
-        # TODO: Don't check if there are no valid flags in the last five ticks
-        # Also, check if all of the five previous flags are valid
+        self.__create_dict_data(team, nround)
 
         if nround == 0:
             self.logger.info("First tick. Skipping GET_CHECK")
@@ -117,7 +171,7 @@ class Checker:
                         self.logger.error(f"Invalid return code '{e.returncode}'. Text is {e.output}")
                         return
                     self.logger.info(
-                        f"Operation {Action.GET_FLAG.name} returned error {e.returncode} with text {e.output}. Corresponds to {Status(e.returncode).name}"
+                        f"Operation {Action.CHECK_SLA.name} for team {team} at tick {nround} returned error {e.returncode} with text {e.output}. Corresponds to {Status(e.returncode).name}"
                     )
                     self.status[nround][team]["GET"] = Status(e.returncode)
 
@@ -125,34 +179,6 @@ class Checker:
             self.logger.info("Timeout expired")
             self.status[nround][team]["GET"] = Status.DOWN
 
-        except Exception as e:
-            self.logger.error(f"Generic exception happened: {e}")
-
-        try:
-            _ = subprocess.check_output(
-                self.command.split(" "),
-                cwd=self.path,
-                timeout=self.GET_timeout,
-                env={
-                    "ACTION": Action.GET_FLAG.name,
-                    "TEAM_ID": str(team),
-                    "ROUND": str(nround),
-                    "FLAG": current_flag,
-                },
-                stderr=subprocess.STDOUT,
-            )
-        except subprocess.TimeoutExpired:
-            self.logger.info(f"Timeout expired for {self.name}")
-            self.status[nround][team]["GET"] = Status.DOWN
-        except subprocess.CalledProcessError as e:
-            # Filter out eventual non compliant return values (such as -1)
-            if e.returncode not in Status:
-                self.logger.error(f"Invalid return code '{e.returncode}'. Text is {e.output}")
-                return
-            self.logger.info(
-                f"Operation {Action.GET_FLAG.name} returned error {e.returncode} with text {e.output}. Corresponds to {Status(e.returncode).name}"
-            )
-            self.status[nround][team]["GET"] = Status(e.returncode)
         except Exception as e:
             self.logger.error(f"Generic exception happened: {e}")
 
@@ -165,6 +191,8 @@ class Checker:
             team (int): zero indexed team number
             nround(int): zero indexed current tick number
         """
+        self.__create_dict_data(team, nround)
+
         if nround == int(os.getenv("ROUNDS")) - 1:
             self.logger.info("Reached last round. Skipping FLAG_IN")
             self.status[nround][team]["PUT"] = Status.CHECKER_DISABLED
@@ -203,7 +231,7 @@ class Checker:
         except Exception as e:
             self.logger.error(f"Generic exception happened: {e}")
 
-    def __get_valid_flags(self, team: int, nround: int) -> list[str]:
+    def get_valid_flags(self, team: int, nround: int) -> list[str]:
         """
         Gets the last 5 flags
         Returns nothing if on first tick
@@ -222,15 +250,11 @@ class Checker:
         return flags
 
     def __create_dict_data(self, team: int, nround: int) -> None:
-        # NOTE: Probably not thread safe.
-
-        # Check if the current round is present. If not, add it as null.
-        if nround not in self.status:
-            self.status[nround] = {}
-
-        # Now check if the team exists. If it doesn't, add it with some sane defaults.
-        if team not in self.status[nround]:
-            self.status[nround][team] = {"SLA": None, "GET": None, "PUT": None}
+        """
+        Creates the basic structure for the status dict
+        """
+        with self.init_lock:
+            self.status.setdefault(nround, {}).setdefault(team, {"SLA": None, "GET": None, "PUT": None})
 
     @override
     def __str__(self) -> str:
