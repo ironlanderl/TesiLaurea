@@ -6,6 +6,7 @@ from checker import Checker
 from dotenv import load_dotenv
 from scheduler import Scheduler
 from utils import get_logger
+from prometheus_client import start_http_server
 
 logger = get_logger("Orchestrator")
 
@@ -20,6 +21,8 @@ if not load_dotenv():
 
 
 def main():
+
+    start_http_server(int(os.getenv("PROMETHEUS_PORT")))
 
     checker_configs: list[str] = [
         "../CyberChallenge.IT-AD-2024/checkers/CCForms-1",
