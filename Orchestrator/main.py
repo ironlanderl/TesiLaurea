@@ -2,8 +2,8 @@ import json
 import os
 import time
 from datetime import datetime
-
 from checker import Checker
+from dotenv import load_dotenv
 from utils import get_logger
 
 # TODO: Change how this works.
@@ -12,11 +12,20 @@ from utils import get_logger
 # As in, the main just calls the scheduler, the scheduler randomizes execution times, starts a thread for each checker with a sleep until their time, then returns. The main will then calculate the time until the next tick, at which point the cycle repeats
 # There shouldn't be an issue with having to wait for processes, but still might be needed.
 # Also will have to use locks for concurrent access to the state dict.
-# 
+# Options 2:
+# Main thread 1 -> scheduler thread 2 -> checker thread n
+# Instead of spawning multiple threads, the scheduler just generates a 'wait distance' between each check, and sleeps to start it
+
+logger = get_logger("Orchestrator")
+
+if not load_dotenv():
+    logger.error("Failed to load .env. Using defaults")
+    os.environ["ROUNDS"] = str(10)
+    os.environ["ROUND_TIME"] = str(120)
+    os.environ["TEAMS"] = str(2)
+
 
 def main():
-
-    logger = get_logger("Orchestrator")
 
     checker_configs: list[str] = [
         "../CyberChallenge.IT-AD-2024/checkers/CCForms-1",
@@ -34,9 +43,9 @@ def main():
     for path in checker_configs:
         checkers.append(Checker(path))
 
-    ROUNDS = 10
-    ROUND_TIME = 150 # Seconds
-    TEAMS = 3
+    ROUNDS = int(os.getenv("ROUNDS"))
+    ROUND_TIME = int(os.getenv("ROUND_TIME"))  # Seconds
+    TEAMS = int(os.getenv("TEAMS"))
 
     # NOTE: Figure out a better way to handle the timing? Currently goes around 0.000270 seconds faster than real time.
     for nround in range(ROUNDS):

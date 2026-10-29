@@ -1,4 +1,5 @@
 import json
+import os
 import pathlib
 import subprocess
 from typing import override
@@ -81,7 +82,51 @@ class Checker:
         # TODO: Don't check if there are no valid flags in the last five ticks
         # Also, check if all of the five previous flags are valid
 
-        current_flag: str = self.status[nround][team]["flag"]
+        if nround == 0:
+            self.logger.info("First tick. Skipping GET_CHECK")
+            self.status[nround][team]["GET"] = Status.CHECKER_DISABLED
+            return
+
+        flags_to_check = self.__get_valid_flags(team, nround)
+
+        if len(flags_to_check) == 0:
+            self.logger.info(f"No valid flags for tick {nround}")
+            self.status[nround][team]["GET"] = Status.DOWN
+            return
+
+        self.logger.info(f"Going to check {len(flags_to_check)} flags")
+
+        try:  # Main try except. Only test timeouts and generic exceptions
+            for current_flag in flags_to_check:
+                try:  # Second try except. Check for the return value
+                    _ = subprocess.check_output(
+                        self.command.split(" "),
+                        cwd=self.path,
+                        timeout=self.GET_timeout,
+                        env={
+                            "ACTION": Action.GET_FLAG.name,
+                            "TEAM_ID": str(team),
+                            "ROUND": str(nround),
+                            "FLAG": current_flag,
+                        },
+                        stderr=subprocess.STDOUT,
+                    )
+                except subprocess.CalledProcessError as e:
+                    # Filter out eventual non compliant return values (such as -1)
+                    if e.returncode not in Status:
+                        self.logger.error(f"Invalid return code '{e.returncode}'. Text is {e.output}")
+                        return
+                    self.logger.info(
+                        f"Operation {Action.GET_FLAG.name} returned error {e.returncode} with text {e.output}. Corresponds to {Status(e.returncode).name}"
+                    )
+                    self.status[nround][team]["GET"] = Status(e.returncode)
+
+        except subprocess.TimeoutExpired:
+            self.logger.info("Timeout expired")
+            self.status[nround][team]["GET"] = Status.DOWN
+
+        except Exception as e:
+            self.logger.error(f"Generic exception happened: {e}")
 
         try:
             _ = subprocess.check_output(
@@ -114,12 +159,16 @@ class Checker:
     def check_put(self, team: int, nround: int) -> None:
         """
         Checks the ability to insert flags into the system
+        Gets skipped if ran on the last tick
 
         Args:
             team (int): zero indexed team number
             nround(int): zero indexed current tick number
         """
-        # TODO: Don't execute on last round.
+        if nround == int(os.getenv("ROUNDS")) - 1:
+            self.logger.info("Reached last round. Skipping FLAG_IN")
+            self.status[nround][team]["PUT"] = Status.CHECKER_DISABLED
+            return
 
         new_flag = generate_flag(team, nround)
         self.status[nround][team]["flag"] = new_flag
@@ -134,8 +183,8 @@ class Checker:
                     "TEAM_ID": str(team),
                     "ROUND": str(nround),
                     "FLAG": new_flag,
-                    "FLAGID_SERVICE": "http://127.0.0.1:5000", # TODO: Don't hardcode these
-                    "FLAGID_TOKEN": "5774A8F69DDEC6C954D2CBBDE2B5A7EF"
+                    "FLAGID_SERVICE": "http://127.0.0.1:5000",  # TODO: Don't hardcode these
+                    "FLAGID_TOKEN": "5774A8F69DDEC6C954D2CBBDE2B5A7EF",
                 },
                 stderr=subprocess.STDOUT,
             )
@@ -153,6 +202,24 @@ class Checker:
             self.status[nround][team]["PUT"] = Status(e.returncode)
         except Exception as e:
             self.logger.error(f"Generic exception happened: {e}")
+
+    def __get_valid_flags(self, team: int, nround: int) -> list[str]:
+        """
+        Gets the last 5 flags
+        Returns nothing if on first tick
+        """
+
+        flags: list[str] = []
+
+        if nround == 0:
+            return flags
+
+        for tick in range(nround - 1, max(nround - 1 - 5, -1), -1):
+            self.logger.debug(f"Checking flag for tick {tick}. Status is {self.status[tick][team]['PUT']}")
+            if self.status[tick][team]["PUT"] == Status.OK:
+                flags.append(self.status[tick][team]["flag"])
+
+        return flags
 
     def __create_dict_data(self, team: int, nround: int) -> None:
         # NOTE: Probably not thread safe.
