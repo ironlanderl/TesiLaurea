@@ -4,17 +4,8 @@ import time
 from datetime import datetime, timedelta
 from checker import Checker
 from dotenv import load_dotenv
+from scheduler import Scheduler
 from utils import get_logger
-
-# TODO: Change how this works.
-# After some research, checks only seem to happen between 1 second and 1 minute and 40 seconds after the tick starts.
-# Current idea: Main (thread 1) -> Scheduler (thread 1) -> Checker per team (each one it's own thread. All operations still happen one after the other for now)
-# As in, the main just calls the scheduler, the scheduler randomizes execution times, starts a thread for each checker with a sleep until their time, then returns. The main will then calculate the time until the next tick, at which point the cycle repeats
-# There shouldn't be an issue with having to wait for processes, but still might be needed.
-# Also will have to use locks for concurrent access to the state dict.
-# Options 2:
-# Main thread 1 -> scheduler thread 2 -> checker thread n
-# Instead of spawning multiple threads, the scheduler just generates a 'wait distance' between each check, and sleeps to start it
 
 logger = get_logger("Orchestrator")
 
@@ -23,6 +14,9 @@ if not load_dotenv():
     os.environ["ROUNDS"] = str(10)
     os.environ["ROUND_TIME"] = str(120)
     os.environ["TEAMS"] = str(2)
+
+    os.environ["MIN_WAIT"] = str(1)
+    os.environ["MAX_WAIT"] = str(100)
 
 
 def main():
@@ -43,21 +37,17 @@ def main():
     for path in checker_configs:
         checkers.append(Checker(path))
 
+    scheduler = Scheduler(checkers)
+
     ROUNDS = int(os.getenv("ROUNDS"))
     ROUND_TIME = int(os.getenv("ROUND_TIME"))  # Seconds
-    TEAMS = int(os.getenv("TEAMS"))
 
     start_time = datetime.now()
     logger.debug(f"Main start time is {start_time}")
     for nround in range(ROUNDS):
         logger.info(f"Round {nround} started at {datetime.now().time()}")
 
-        # NOTE: Might be useful to multithread at least the checkers. One round with a single team takes almost a minute by itself.
-        for checker in checkers:
-            for team in range(TEAMS):
-                checker.check_sla(team, nround)
-                checker.check_put(team, nround)
-                checker.check_get(team, nround)
+        scheduler.run(nround)
 
         if nround < ROUNDS - 1:  # Skip the waiting when exiting from the last round.
             sleep_time = start_time + timedelta(seconds=ROUND_TIME * (nround + 1)) - datetime.now()

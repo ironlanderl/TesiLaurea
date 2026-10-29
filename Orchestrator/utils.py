@@ -1,4 +1,5 @@
 import logging
+import os
 import random
 import string
 from enum import Enum
@@ -50,6 +51,9 @@ def generate_flag(team: int, nround: int, nservice: int = 0) -> str:
 
 
 def get_logger(module: str) -> logging.Logger:
+
+    os.remove("app.log")
+
     logger = logging.getLogger(module)
     logger.setLevel(logging.DEBUG)
 
