@@ -8,16 +8,6 @@ from dotenv import load_dotenv
 from scheduler import Scheduler
 from utils import get_logger
 
-# TODO: Change how this works.
-# After some research, checks only seem to happen between 1 second and 1 minute and 40 seconds after the tick starts.
-# Current idea: Main (thread 1) -> Scheduler (thread 1) -> Checker per team (each one it's own thread. All operations still happen one after the other for now)
-# As in, the main just calls the scheduler, the scheduler randomizes execution times, starts a thread for each checker with a sleep until their time, then returns. The main will then calculate the time until the next tick, at which point the cycle repeats
-# There shouldn't be an issue with having to wait for processes, but still might be needed.
-# Also will have to use locks for concurrent access to the state dict.
-# Options 2:
-# Main thread 1 -> scheduler thread 2 -> checker thread n
-# Instead of spawning multiple threads, the scheduler just generates a 'wait distance' between each check, and sleeps to start it
-
 logger = get_logger("Orchestrator")
 
 if not load_dotenv():
