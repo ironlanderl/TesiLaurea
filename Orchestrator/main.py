@@ -1,7 +1,7 @@
 import json
 import os
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 from checker import Checker
 from dotenv import load_dotenv
 from utils import get_logger
@@ -47,10 +47,10 @@ def main():
     ROUND_TIME = int(os.getenv("ROUND_TIME"))  # Seconds
     TEAMS = int(os.getenv("TEAMS"))
 
-    # NOTE: Figure out a better way to handle the timing? Currently goes around 0.000270 seconds faster than real time.
+    start_time = datetime.now()
+    logger.debug(f"Main start time is {start_time}")
     for nround in range(ROUNDS):
         logger.info(f"Round {nround} started at {datetime.now().time()}")
-        start_time = time.time_ns()
 
         # NOTE: Might be useful to multithread at least the checkers. One round with a single team takes almost a minute by itself.
         for checker in checkers:
@@ -59,13 +59,10 @@ def main():
                 checker.check_put(team, nround)
                 checker.check_get(team, nround)
 
-        end_time = time.time_ns()
-
-        elapsed_time = round((end_time - start_time) / 1_000_000_000, 5)  # Round nanoseconds to seconds
-
         if nround < ROUNDS - 1:  # Skip the waiting when exiting from the last round.
-            logger.info(f"Going to sleep for {ROUND_TIME - elapsed_time} seconds")
-            time.sleep(ROUND_TIME - elapsed_time)
+            sleep_time = start_time + timedelta(seconds=ROUND_TIME * (nround + 1)) - datetime.now()
+            logger.info(f"Going to sleep for {sleep_time.total_seconds()} seconds")
+            time.sleep(sleep_time.total_seconds())
 
     report_dir = "reports/" + datetime.now().strftime("%y-%m-%d_%H-%M-%S")
     os.makedirs(report_dir)
