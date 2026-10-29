@@ -1,10 +1,10 @@
 import json
-import os
-from pprint import pprint
-from typing import Any
-from flask import Flask, request
 import logging
+import os
+from typing import Any
+
 from dotenv import load_dotenv
+from flask import Flask, request
 
 load_dotenv()
 
@@ -12,15 +12,15 @@ logger = logging.basicConfig(level=logging.DEBUG)
 
 app = Flask(__name__)
 app.config["DEBUG"] = True
-app_token = os.getenv("APP_TOKEN") 
+app_token = os.getenv("APP_TOKEN")
 state = {}
 
-@app.route("/postFlagId", methods = ["POST"])
+
+@app.route("/postFlagId", methods=["POST"])
 def postFlagId():
     global state
 
     print(f"{request.data}")
-
 
     data = request.get_json()
 
@@ -39,10 +39,11 @@ def postFlagId():
 
     return "ok", 200
 
-@app.route("/flagIds", methods = ["GET"])
+
+@app.route("/flagIds", methods=["GET"])
 def flagIds():
     global state
-    service_id: str = request.args.get("service", '')
+    service_id: str = request.args.get("service", "")
     team_id: int = int(request.args.get("team", -1))
     round_id: int = int(request.args.get("round", -1))
 
@@ -50,7 +51,8 @@ def flagIds():
 
     return json.dumps(state), {"Content-Type": "application/json"}
 
-@app.route("/", methods = ["GET"])
+
+@app.route("/", methods=["GET"])
 def root():
     global state
 
@@ -60,6 +62,5 @@ def root():
         valid_ticks = list(state[services[0]][teams[0]].keys())[-5:]
     except Exception as e:
         return str(e), 500
-
 
     return {"services": services, "teams": teams, "ticks": valid_ticks}
