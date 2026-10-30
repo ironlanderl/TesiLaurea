@@ -4,10 +4,12 @@ import time
 from datetime import datetime, timedelta
 
 from checker import Checker
+from collector import CheckerCollectorGauge
 from dotenv import load_dotenv
 from scheduler import Scheduler
 from utils import get_logger
 from prometheus_client import start_http_server
+from prometheus_client.core import REGISTRY
 
 logger = get_logger("Orchestrator")
 
@@ -42,6 +44,9 @@ def main():
         checkers.append(Checker(path, i))
 
     scheduler = Scheduler(checkers)
+    data_collector = CheckerCollectorGauge(checkers)
+
+    REGISTRY.register(data_collector)
 
     ROUNDS = int(os.getenv("ROUNDS"))
     ROUND_TIME = int(os.getenv("ROUND_TIME"))  # Seconds
@@ -50,6 +55,9 @@ def main():
     logger.debug(f"Main start time is {start_time}")
     for nround in range(ROUNDS):
         logger.info(f"Round {nround} started at {datetime.now().time()}")
+
+        if nround != 0:
+            data_collector.collect()
 
         scheduler.run(nround)
 
@@ -64,6 +72,11 @@ def main():
     for checker in checkers:
         with open(f"{report_dir}/checker_{checker.name}.json", "w") as f:
             json.dump(checker.status, f, default=lambda x: x.name, indent=2)
+
+    logger.debug(f"Going to sleep for {ROUND_TIME} to allow Prometheus to query the changes")
+    for checker in checkers:
+        checker.update_current_tick(checker.current_tick + 1)
+    time.sleep(ROUND_TIME)  # Sleeping for an extra round to allow Prometheus data to propagate
 
 
 if __name__ == "__main__":

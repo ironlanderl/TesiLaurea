@@ -1,6 +1,7 @@
 import json
 import os
 import pathlib
+import pprint
 import subprocess
 from logging import Logger
 from threading import Lock
@@ -47,6 +48,8 @@ class Checker:
 
         self.init_lock: Lock = Lock()
         self.get_lock: Lock = Lock()
+
+        self.current_tick: int = 0
 
     def check_sla(self, team: int, tick: int) -> None:
         """
@@ -261,11 +264,31 @@ class Checker:
             return flags
 
         for tick in range(ntick - 1, max(ntick - 1 - 5, -1), -1):
-            self.logger.debug(f"Checking flag for tick {tick}. Status is {self.status[tick][team]['PUT']}")
+            self.logger.debug(f"Checking flag for tick {tick} team {team}. Status is {self.status[tick][team]['PUT']}")
             if self.status[tick][team]["PUT"] == Status.OK:
                 flags.append(self.status[tick][team]["flag"])  # pyright: ignore[reportTypedDictNotRequiredAccess]. Check down by is ok
 
         return flags
+
+    def get_last_tick_team_info(self, team: int) -> TickInfo:
+        """
+        Returns a TickInfo of the last game tick.
+        Returns NOT_YET_CHECKED on all of the actions if errors occur
+        """
+        if self.current_tick == 0:
+            self.logger.debug("Tried accessing info on tick 0. Returning default values")
+            return TickInfo(SLA=Status.NOT_YET_CHECKED, GET=Status.NOT_YET_CHECKED, PUT=Status.NOT_YET_CHECKED)
+
+        last_tick = self.current_tick - 1
+
+        if last_tick not in self.status:
+            self.logger.critical("Tried accessing non existing tick somehow. Returning default values")
+            return TickInfo(SLA=Status.NOT_YET_CHECKED, GET=Status.NOT_YET_CHECKED, PUT=Status.NOT_YET_CHECKED)
+
+        return self.status[last_tick][team]
+
+    def update_current_tick(self, tick: int) -> None:
+        self.current_tick = tick
 
     def __create_dict_data(self, team: int, tick: int) -> None:
         """
