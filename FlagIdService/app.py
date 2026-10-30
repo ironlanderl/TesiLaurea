@@ -25,9 +25,6 @@ def health():
 
 @app.route("/postFlagId", methods=["POST"])
 def postFlagId():
-
-    print(f"{request.data}")
-
     data = request.get_json()
 
     token: str = data["token"]
@@ -63,9 +60,9 @@ def root():
 
     try:
         with lock:
-            services = list(state.keys())
-            teams = list(state[services[0]].keys())
-            valid_ticks = list(state[services[0]][teams[0]].keys())[-5:]
+            services = [str(x) for x in list(state.keys())]
+            teams = [str(x) for x in list(state[services[0]].keys())]
+            valid_ticks = [str(x) for x in list(state[services[0]][teams[0]].keys())[-5:]]
     except Exception as e:
         return str(e), 500
 

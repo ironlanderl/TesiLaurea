@@ -4,7 +4,7 @@ run: .venv
 
 .PHONY: test
 test: .venv
-	./.venv/bin/pytest
+	./.venv/bin/pytest -v
 
 .venv: 
 	uv venv .venv
