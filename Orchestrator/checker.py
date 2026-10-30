@@ -2,10 +2,18 @@ import json
 import os
 import pathlib
 import subprocess
+from logging import Logger
 from threading import Lock
-from typing import override
+from typing import NotRequired, Required, TypedDict, override
 
 from utils import Action, Status, generate_flag, get_logger
+
+
+class TickInfo(TypedDict):
+    SLA: Required[Status]
+    GET: Required[Status]
+    PUT: Required[Status]
+    flag: NotRequired[str]
 
 
 class Checker:
@@ -31,24 +39,24 @@ class Checker:
         self.PUT_timeout: int = data["timeout"]["PUT_FLAG"] / 1000
         self.GET_timeout: int = data["timeout"]["GET_FLAG"] / 1000
 
-        self.service_number = service_number
+        self.service_number: int = service_number
 
-        self.status: dict[int, dict[int, dict[str, Status | str | None]]] = {}
+        self.status: dict[int, dict[int, TickInfo]] = {}
 
-        self.logger = get_logger(self.name)
+        self.logger: Logger = get_logger(self.name)
 
-        self.init_lock = Lock()
-        self.get_lock = Lock()
+        self.init_lock: Lock = Lock()
+        self.get_lock: Lock = Lock()
 
-    def check_sla(self, team: int, nround: int) -> None:
+    def check_sla(self, team: int, tick: int) -> None:
         """
         Checks the SLA status of the service
 
         Args:
             team (int): zero indexed team number
-            nround(int): zero indexed current tick number
+            tick(int): zero indexed current tick number
         """
-        self.__create_dict_data(team, nround)
+        self.__create_dict_data(team, tick)
         try:
             _ = subprocess.check_output(
                 self.command.split(" "),
@@ -57,45 +65,47 @@ class Checker:
                 env={
                     "ACTION": Action.CHECK_SLA.name,
                     "TEAM_ID": str(team),
-                    "ROUND": str(nround),
+                    "ROUND": str(tick),
                 },
                 stderr=subprocess.STDOUT,
             )
         except subprocess.TimeoutExpired:
             self.logger.info(f"Timeout expired for {self.name}")
-            self.status[nround][team]["SLA"] = Status.DOWN
+            self.status[tick][team]["SLA"] = Status.DOWN
         except subprocess.CalledProcessError as e:
             # Filter out eventual non compliant return values (such as -1)
             if e.returncode not in Status:
                 self.logger.error(f"Invalid return code '{e.returncode}'. Text is {e.output}")
+                self.status[tick][team]["SLA"] = Status.ERROR
                 return
             self.logger.info(
-                f"Operation {Action.CHECK_SLA.name} for team {team} at tick {nround} returned error {e.returncode} with text {e.output}. Corresponds to {Status(e.returncode).name}"
+                f"Operation {Action.CHECK_SLA.name} for team {team} at tick {tick} returned error {e.returncode} with text {e.output}. Corresponds to {Status(e.returncode).name}"
             )
-            self.status[nround][team]["SLA"] = Status(e.returncode)
+            self.status[tick][team]["SLA"] = Status(e.returncode)
         except Exception as e:
             self.logger.error(f"Generic exception happened: {e}")
+            self.status[tick][team]["SLA"] = Status.ERROR
 
-    def check_get_single(self, team: int, nround: int, flag: str) -> None:
+    def check_get_single(self, team: int, tick: int, flag: str) -> None:
         """
         Checks the ability to retrieve a specific flag from the system
 
         Args:
             team (int): zero indexed team number
-            nround(int): zero indexed current tick number
+            tick(int): zero indexed current tick number
             flag(str): the flag to check
         """
-        self.__create_dict_data(team, nround)
+        self.__create_dict_data(team, tick)
 
         # NOTE: The entire get operation is under lock
         with self.get_lock:
             # If down or Disabled, skip to save time
-            if self.status[nround][team]["GET"] in (Status.DOWN, Status.CHECKER_DISABLED):
+            if self.status[tick][team]["GET"] in (Status.DOWN, Status.CHECKER_DISABLED, Status.ERROR):
                 return
 
-            if nround == 0:
+            if tick == 0:
                 self.logger.info("First tick. Skipping GET_CHECK")
-                self.status[nround][team]["GET"] = Status.CHECKER_DISABLED
+                self.status[tick][team]["GET"] = Status.CHECKER_DISABLED
                 return
 
             try:
@@ -106,7 +116,7 @@ class Checker:
                     env={
                         "ACTION": Action.GET_FLAG.name,
                         "TEAM_ID": str(team),
-                        "ROUND": str(nround),
+                        "ROUND": str(tick),
                         "FLAG": flag,
                     },
                     stderr=subprocess.STDOUT,
@@ -115,39 +125,41 @@ class Checker:
                 # Filter out eventual non compliant return values (such as -1)
                 if e.returncode not in Status:
                     self.logger.error(f"Invalid return code '{e.returncode}'. Text is {e.output}")
+                    self.status[tick][team]["GET"] = Status.ERROR
                     return
                 self.logger.info(
-                    f"Operation {Action.CHECK_SLA.name} for team {team} at tick {nround} returned error {e.returncode} with text {e.output}. Corresponds to {Status(e.returncode).name}"
+                    f"Operation {Action.GET_FLAG.name} for team {team} at tick {tick} returned error {e.returncode} with text {e.output}. Corresponds to {Status(e.returncode).name}"
                 )
-                self.status[nround][team]["GET"] = Status(e.returncode)
+                self.status[tick][team]["GET"] = Status(e.returncode)
 
             except subprocess.TimeoutExpired:
                 self.logger.info("Timeout expired")
-                self.status[nround][team]["GET"] = Status.DOWN
+                self.status[tick][team]["GET"] = Status.DOWN
 
             except Exception as e:
                 self.logger.error(f"Generic exception happened: {e}")
+                self.status[tick][team]["GET"] = Status.ERROR
 
-    def check_get(self, team: int, nround: int) -> None:
+    def check_get(self, team: int, tick: int) -> None:
         """
         Checks the ability to retrieve the last five valid flags from the system
 
         Args:
             team (int): zero indexed team number
-            nround(int): zero indexed current tick number
+            tick(int): zero indexed current tick number
         """
-        self.__create_dict_data(team, nround)
+        self.__create_dict_data(team, tick)
 
-        if nround == 0:
+        if tick == 0:
             self.logger.info("First tick. Skipping GET_CHECK")
-            self.status[nround][team]["GET"] = Status.CHECKER_DISABLED
+            self.status[tick][team]["GET"] = Status.CHECKER_DISABLED
             return
 
-        flags_to_check = self.__get_valid_flags(team, nround)
+        flags_to_check = self.get_valid_flags(team, tick)
 
         if len(flags_to_check) == 0:
-            self.logger.info(f"No valid flags for tick {nround}")
-            self.status[nround][team]["GET"] = Status.DOWN
+            self.logger.info(f"No valid flags for tick {tick}")
+            self.status[tick][team]["GET"] = Status.DOWN
             return
 
         self.logger.info(f"Going to check {len(flags_to_check)} flags")
@@ -162,7 +174,7 @@ class Checker:
                         env={
                             "ACTION": Action.GET_FLAG.name,
                             "TEAM_ID": str(team),
-                            "ROUND": str(nround),
+                            "ROUND": str(tick),
                             "FLAG": current_flag,
                         },
                         stderr=subprocess.STDOUT,
@@ -171,37 +183,39 @@ class Checker:
                     # Filter out eventual non compliant return values (such as -1)
                     if e.returncode not in Status:
                         self.logger.error(f"Invalid return code '{e.returncode}'. Text is {e.output}")
+                        self.status[tick][team]["GET"] = Status.ERROR
                         return
                     self.logger.info(
-                        f"Operation {Action.CHECK_SLA.name} for team {team} at tick {nround} returned error {e.returncode} with text {e.output}. Corresponds to {Status(e.returncode).name}"
+                        f"Operation {Action.GET_FLAG.name} for team {team} at tick {tick} returned error {e.returncode} with text {e.output}. Corresponds to {Status(e.returncode).name}"
                     )
-                    self.status[nround][team]["GET"] = Status(e.returncode)
+                    self.status[tick][team]["GET"] = Status(e.returncode)
 
         except subprocess.TimeoutExpired:
             self.logger.info("Timeout expired")
-            self.status[nround][team]["GET"] = Status.DOWN
+            self.status[tick][team]["GET"] = Status.DOWN
 
         except Exception as e:
             self.logger.error(f"Generic exception happened: {e}")
+            self.status[tick][team]["GET"] = Status.ERROR
 
-    def check_put(self, team: int, nround: int) -> None:
+    def check_put(self, team: int, tick: int) -> None:
         """
         Checks the ability to insert flags into the system
         Gets skipped if ran on the last tick
 
         Args:
             team (int): zero indexed team number
-            nround(int): zero indexed current tick number
+            tick(int): zero indexed current tick number
         """
-        self.__create_dict_data(team, nround)
+        self.__create_dict_data(team, tick)
 
-        if nround == int(os.getenv("ROUNDS")) - 1:
+        if tick == int(os.getenv("ROUNDS")) - 1:  # pyright: ignore[reportArgumentType]. Gets forced by main
             self.logger.info("Reached last round. Skipping FLAG_IN")
-            self.status[nround][team]["PUT"] = Status.CHECKER_DISABLED
+            self.status[tick][team]["PUT"] = Status.CHECKER_DISABLED
             return
 
-        new_flag = generate_flag(team, nround, self.service_number)
-        self.status[nround][team]["flag"] = new_flag
+        new_flag = generate_flag(team, tick, self.service_number)
+        self.status[tick][team]["flag"] = new_flag
 
         try:
             _ = subprocess.check_output(
@@ -211,52 +225,56 @@ class Checker:
                 env={
                     "ACTION": Action.PUT_FLAG.name,
                     "TEAM_ID": str(team),
-                    "ROUND": str(nround),
+                    "ROUND": str(tick),
                     "FLAG": new_flag,
-                    "FLAGID_SERVICE": os.getenv("FLAGID_SERVICE"),
-                    "FLAGID_TOKEN": os.getenv("FLAGID_TOKEN"),
+                    "FLAGID_SERVICE": str(os.getenv("FLAGID_SERVICE")),
+                    "FLAGID_TOKEN": str(os.getenv("FLAGID_TOKEN")),
                 },
                 stderr=subprocess.STDOUT,
             )
         except subprocess.TimeoutExpired:
             self.logger.info(f"Timeout expired for {self.name}")
-            self.status[nround][team]["PUT"] = Status.DOWN
+            self.status[tick][team]["PUT"] = Status.DOWN
         except subprocess.CalledProcessError as e:
             # Filter out eventual non compliant return values (such as -1)
             if e.returncode not in Status:
                 self.logger.error(f"Invalid return code '{e.returncode}'. Text is {e.output}")
+                self.status[tick][team]["PUT"] = Status.ERROR
                 return
             self.logger.info(
-                f"Operation {Action.PUT_FLAG.name} returned error {e.returncode} with text {e.output}. Corresponds to {Status(e.returncode).name}"
+                f"Operation {Action.PUT_FLAG.name} for team {team} at tick {tick} returned error {e.returncode} with text {e.output}. Corresponds to {Status(e.returncode).name}"
             )
-            self.status[nround][team]["PUT"] = Status(e.returncode)
+            self.status[tick][team]["PUT"] = Status(e.returncode)
         except Exception as e:
             self.logger.error(f"Generic exception happened: {e}")
+            self.status[tick][team]["PUT"] = Status.ERROR
 
-    def get_valid_flags(self, team: int, nround: int) -> list[str]:
+    def get_valid_flags(self, team: int, ntick: int) -> list[str]:
         """
-        Gets the last 5 flags
+        Gets the last 5 valid flags
         Returns nothing if on first tick
         """
 
         flags: list[str] = []
 
-        if nround == 0:
+        if ntick == 0:
             return flags
 
-        for tick in range(nround - 1, max(nround - 1 - 5, -1), -1):
+        for tick in range(ntick - 1, max(ntick - 1 - 5, -1), -1):
             self.logger.debug(f"Checking flag for tick {tick}. Status is {self.status[tick][team]['PUT']}")
             if self.status[tick][team]["PUT"] == Status.OK:
-                flags.append(self.status[tick][team]["flag"])
+                flags.append(self.status[tick][team]["flag"])  # pyright: ignore[reportTypedDictNotRequiredAccess]. Check down by is ok
 
         return flags
 
-    def __create_dict_data(self, team: int, nround: int) -> None:
+    def __create_dict_data(self, team: int, tick: int) -> None:
         """
         Creates the basic structure for the status dict
         """
         with self.init_lock:
-            self.status.setdefault(nround, {}).setdefault(team, {"SLA": None, "GET": None, "PUT": None})
+            _ = self.status.setdefault(tick, {}).setdefault(
+                team, TickInfo(SLA=Status.NOT_YET_CHECKED, GET=Status.NOT_YET_CHECKED, PUT=Status.NOT_YET_CHECKED)
+            )
 
     @override
     def __str__(self) -> str:

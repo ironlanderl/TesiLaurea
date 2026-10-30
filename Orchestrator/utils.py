@@ -10,6 +10,7 @@ class Status(Enum):
     DOWN = 104
     CHECKER_DISABLED = 109
     ERROR = 110
+    NOT_YET_CHECKED = 124
 
 
 class Action(Enum):
@@ -37,8 +38,6 @@ def base36encode(number: int) -> str:
 
 
 def generate_flag(team: int, nround: int, nservice: int = 0) -> str:
-    # TODO: Figure out how to assign service numbers
-
     alphabet: str = string.ascii_uppercase + string.digits
 
     return (
@@ -66,7 +65,7 @@ def get_logger(module: str) -> logging.Logger:
     formatter = logging.Formatter(
         "{asctime} - {levelname} - {name} - {message}",
         style="{",
-        datefmt="%Y-%m-%d %H:%M",
+        datefmt="%Y-%m-%d %H:%M:%S",
     )
     console_handler.setFormatter(formatter)
     file_handler.setFormatter(formatter)
