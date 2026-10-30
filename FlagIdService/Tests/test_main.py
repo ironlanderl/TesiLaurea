@@ -12,7 +12,7 @@ from werkzeug.test import TestResponse
 
 load_dotenv()
 
-from ..app import app, state
+from ..app import app
 
 
 @pytest.fixture
