@@ -2,6 +2,7 @@ import json
 import os
 import time
 from datetime import datetime, timedelta
+
 from checker import Checker
 from dotenv import load_dotenv
 from scheduler import Scheduler

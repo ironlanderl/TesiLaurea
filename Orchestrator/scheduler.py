@@ -2,10 +2,17 @@ import os
 import random
 import time
 from threading import Thread
+from typing import NotRequired, Required, TypedDict
 
 from checker import Checker
 from dotenv import load_dotenv
 from utils import Action, get_logger
+
+
+class ThreadDict(TypedDict):
+    thread: Required[Thread]
+    rng_wait: Required[float]
+    wait: NotRequired[float]
 
 
 class Scheduler:
@@ -15,9 +22,9 @@ class Scheduler:
         self.max_time: int = int(os.getenv("MAX_WAIT"))
         self.logger = get_logger("Scheduler")
 
-    def run(self, nround: int) -> None:
+    def run(self, tick: int) -> None:
 
-        thread_info = []
+        thread_info: list[ThreadDict] = []
 
         teams = int(os.getenv("TEAMS"))
         # For each checker, team and action:
@@ -29,49 +36,47 @@ class Scheduler:
             for team in range(teams):
                 for action in Action:
                     if action == Action.CHECK_SLA:
-                        checker_thread = {}
-                        checker_thread["thread"] = Thread(
-                            target=checker.check_sla,
-                            args=(
-                                team,
-                                nround,
+                        checker_thread: ThreadDict = ThreadDict(
+                            thread=Thread(
+                                target=checker.check_sla,
+                                args=(
+                                    team,
+                                    tick,
+                                ),
+                                name=f"{checker.name}_{team}_{action.name}",
                             ),
-                            name=f"{checker.name}_{team}_{action.name}",
+                            rng_wait=random.uniform(self.min_time, self.max_time),
                         )
-                        checker_thread["rng_wait"] = random.uniform(self.min_time, self.max_time)
                         thread_info.append(checker_thread)
                     elif action == Action.PUT_FLAG:
-                        checker_thread = {}
-                        checker_thread["thread"] = Thread(
-                            target=checker.check_put,
-                            args=(
-                                team,
-                                nround,
+                        checker_thread: ThreadDict = ThreadDict(
+                            thread=Thread(
+                                target=checker.check_put,
+                                args=(
+                                    team,
+                                    tick,
+                                ),
+                                name=f"{checker.name}_{team}_{action.name}",
                             ),
-                            name=f"{checker.name}_{team}_{action.name}",
+                            rng_wait=random.uniform(self.min_time, self.max_time),
                         )
-                        checker_thread["rng_wait"] = random.uniform(self.min_time, self.max_time)
                         thread_info.append(checker_thread)
                     elif action == Action.GET_FLAG:
-                        flag_list = checker.get_valid_flags(team, nround)
+                        flag_list = checker.get_valid_flags(team, tick)
                         if len(flag_list) == 0:  # Current hacky solution
                             flag_list.append("INVALID")
                         for i, flag in enumerate(flag_list):
-                            checker_thread = {}
-                            checker_thread["thread"] = Thread(
-                                target=checker.check_get_single,
-                                args=(
-                                    team,
-                                    nround,
-                                    flag,
+                            checker_thread: ThreadDict = ThreadDict(
+                                thread=Thread(
+                                    target=checker.check_get_single,
+                                    args=(team, tick, flag),
+                                    name=f"{checker.name}_{team}_{action.name}",
                                 ),
-                                name=f"{checker.name}_{team}_{action.name}_{i}",
+                                rng_wait=random.uniform(self.min_time, self.max_time),
                             )
-                            checker_thread["rng_wait"] = random.uniform(self.min_time, self.max_time)
                             thread_info.append(checker_thread)
 
         # Now we sort
-        # Also turns this into a tuple, where [0] is the key and [1] is the value
         threads_sorted = sorted(thread_info, key=lambda x: x["rng_wait"])
 
         # Calculate the differences
@@ -85,8 +90,8 @@ class Scheduler:
 
         # We can now start the main calling loop
         for thread in threads_sorted:
-            self.logger.info(f"Sleeping for {thread['wait']} and then starting {thread['thread'].name}")
-            time.sleep(thread["wait"])
+            self.logger.info(f"Sleeping for {thread['wait']} and then starting {thread['thread'].name}")  # pyright: ignore[reportTypedDictNotRequiredAccess]
+            time.sleep(thread["wait"])  # pyright: ignore[reportTypedDictNotRequiredAccess] Always gets set before this
             thread["thread"].start()
 
         # Every thread should be done, but should probably still check
@@ -103,8 +108,8 @@ if __name__ == "__main__":
 
     checkers: list[Checker] = []
 
-    for path in checker_configs:
-        checkers.append(Checker(path))
+    for i, path in enumerate(checker_configs):
+        checkers.append(Checker(path, i))
 
     scheduler = Scheduler(checkers)
 

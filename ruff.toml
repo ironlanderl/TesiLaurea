@@ -37,7 +37,7 @@ target-version = "py314"
 
 [lint]
 # select = [...]  # See the Default Rules page for the full listing.
-ignore = []
+ignore = ["BLE001"]
 
 # Allow fix for all enabled rules (when `--fix`) is provided.
 fixable = ["ALL"]
