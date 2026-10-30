@@ -2,6 +2,9 @@
 run: .venv
 	./.venv/bin/flask run
 
+.PHONY: test
+test: .venv
+	./.venv/bin/pytest
 
 .venv: 
 	uv venv .venv

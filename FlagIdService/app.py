@@ -18,6 +18,11 @@ state = {}
 lock = Lock()
 
 
+@app.route("/health")
+def health():
+    return "ok", 200
+
+
 @app.route("/postFlagId", methods=["POST"])
 def postFlagId():
 
