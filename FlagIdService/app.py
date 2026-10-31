@@ -16,11 +16,8 @@ load_dotenv()
 logger = logging.basicConfig(level=logging.DEBUG)
 
 
-con = sqlite3.connect("flagIds.db")
-
 app = Flask(__name__)
 app.config["DEBUG"] = True
-app_token = os.getenv("APP_TOKEN")
 
 
 @app.route("/health")
@@ -30,13 +27,15 @@ def health():
 
 @app.route("/postFlagId", methods=["POST"])
 def postFlagId():
+
+    con: sqlite3.Connection = app.config["DB_CON"]
     data = request.get_json()
 
     token: str = data["token"]
-    if token != app_token:
+    if token != app.config["APP_TOKEN"]:
         return "Invalid token", 401
 
-    service_id: str = data["serviceId"]
+    service_id: int = data["serviceId"]
     team_id: int = data["teamId"]
     round_id: int = data["round"]
     flag_id: Any = data["flagId"]
@@ -54,6 +53,7 @@ def postFlagId():
 
 @app.route("/flagIds", methods=["GET"])
 def flagIds():
+    con: sqlite3.Connection = app.config["DB_CON"]
     service_id: str = request.args.get("service", "")
     team_id: int = int(request.args.get("team", -1))
     round_id: int = int(request.args.get("round", -1))
@@ -65,15 +65,18 @@ def flagIds():
 
 @app.route("/", methods=["GET"])
 def root():
-    try:
-        with lock:
-            services = [str(x) for x in list(state.keys())]
-            teams = [str(x) for x in list(state[services[0]].keys())]
-            valid_ticks = [str(x) for x in list(state[services[0]][teams[0]].keys())[-5:]]
-    except Exception as e:
-        return str(e), 500
 
-    return {"services": services, "teams": teams, "ticks": valid_ticks}
+    con: sqlite3.Connection = app.config["DB_CON"]
+    cur = con.cursor()
+
+    # cur.execute.fetchall returns a list of lists with just a single element inside each of the sublists
+    # So we extract them, convert them to strings, and flatten them to a single list
+
+    services = [str(x[0]) for x in cur.execute("SELECT DISTINCT service FROM data").fetchall()]
+    teams = [str(x[0]) for x in cur.execute("SELECT DISTINCT team FROM data").fetchall()]
+    ticks = [str(x[0]) for x in cur.execute("SELECT DISTINCT tick FROM data ORDER BY tick DESC LIMIT 5").fetchall()]
+
+    return {"services": services, "teams": teams, "ticks": ticks}
 
 
 if __name__ == "__main__":
@@ -82,13 +85,17 @@ if __name__ == "__main__":
     parser.add_argument("--reset", help="Resets the persistence db", action="store_true")
     args = parser.parse_args()
 
+    con = sqlite3.connect("flagIds.db")
+    app.config["DB_CON"] = con
+    app.config["APP_TOKEN"] = os.getenv("APP_TOKEN")
+
     if not exists or args.reset:
         con.execute("DROP TABLE IF EXISTS data")
         con.execute("""CREATE TABLE data (
                     uuid text PRIMARY KEY,
-                    service text NOT NULL,
-                    team text NOT NULL,
-                    round text NOT NULL,
+                    service int NOT NULL,
+                    team int NOT NULL,
+                    tick int NOT NULL,
                     flag_id blob NOT NULL
                     )""")
 

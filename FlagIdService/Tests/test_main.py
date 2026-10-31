@@ -1,26 +1,39 @@
 import os
 from pprint import pprint
+import sqlite3
 import sys
 import tempfile
 from typing import Generator
 from uuid import uuid4
 
-from dotenv import load_dotenv
 from flask.testing import FlaskClient
 import pytest
 from werkzeug.test import TestResponse
-
-load_dotenv()
 
 from ..app import app
 
 
 @pytest.fixture
 def client() -> Generator[FlaskClient]:
-    app.config.update({"TESTING": True})
+    tempdir = tempfile.mkdtemp()
+    app.config.update({"TESTING": True, "APP_TOKEN": "TEST_TOKEN", "DB_CON": sqlite3.connect(f"{tempdir}/db.sql")})
+
+    con: sqlite3.Connection = app.config["DB_CON"]
+
+    con.execute("DROP TABLE IF EXISTS data")
+    con.execute("""CREATE TABLE data (
+                uuid text PRIMARY KEY,
+                service int NOT NULL,
+                team int NOT NULL,
+                tick int NOT NULL,
+                flag_id blob NOT NULL
+                )""")
 
     with app.test_client() as client:
         yield client
+
+    con.close()
+    os.system(f"rm -rf {tempdir}")
 
 
 def __generate_test_data() -> Generator[tuple[str, str, str]]:
@@ -42,7 +55,7 @@ def test_insertion(client: FlaskClient):
         response: TestResponse = client.post(
             "/postFlagId",
             json={
-                "token": str(os.getenv("APP_TOKEN")),
+                "token": app.config["APP_TOKEN"],
                 "serviceId": test[0],
                 "teamId": test[1],
                 "round": test[2],
@@ -60,7 +73,7 @@ def test_root(client: FlaskClient):
         _: TestResponse = client.post(
             "/postFlagId",
             json={
-                "token": str(os.getenv("APP_TOKEN")),
+                "token": app.config["APP_TOKEN"],
                 "serviceId": test[0],
                 "teamId": test[1],
                 "round": test[2],
@@ -90,7 +103,7 @@ def test_flag_id(client: FlaskClient):
         _: TestResponse = client.post(
             "/postFlagId",
             json={
-                "token": str(os.getenv("APP_TOKEN")),
+                "token": app.config["APP_TOKEN"],
                 "serviceId": test[0],
                 "teamId": test[1],
                 "round": test[2],
@@ -121,7 +134,7 @@ def test_flag_id_filter_service(client: FlaskClient):
         _: TestResponse = client.post(
             "/postFlagId",
             json={
-                "token": str(os.getenv("APP_TOKEN")),
+                "token": app.config["APP_TOKEN"],
                 "serviceId": test[0],
                 "teamId": test[1],
                 "round": test[2],
@@ -158,7 +171,7 @@ def test_flag_id_filter_team(client: FlaskClient):
         _: TestResponse = client.post(
             "/postFlagId",
             json={
-                "token": str(os.getenv("APP_TOKEN")),
+                "token": app.config["APP_TOKEN"],
                 "serviceId": test[0],
                 "teamId": test[1],
                 "round": test[2],
@@ -195,7 +208,7 @@ def test_flag_id_filter_tick(client: FlaskClient):
         _: TestResponse = client.post(
             "/postFlagId",
             json={
-                "token": str(os.getenv("APP_TOKEN")),
+                "token": app.config["APP_TOKEN"],
                 "serviceId": test[0],
                 "teamId": test[1],
                 "round": test[2],
@@ -235,7 +248,7 @@ def test_flag_id_filter_all(client: FlaskClient):
         _: TestResponse = client.post(
             "/postFlagId",
             json={
-                "token": str(os.getenv("APP_TOKEN")),
+                "token": app.config["APP_TOKEN"],
                 "serviceId": test[0],
                 "teamId": test[1],
                 "round": test[2],
