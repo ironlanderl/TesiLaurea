@@ -4,7 +4,7 @@ run: .venv
 
 .PHONY: test
 test: .venv
-	./.venv/bin/pytest -v --durations=0 --showlocals -x
+	./.venv/bin/pytest -v --durations=0 --showlocals
 
 .venv: 
 	uv venv .venv

@@ -235,12 +235,16 @@ def test_flag_id_filter_tick(client: FlaskClient):
             assert service in response_json
             assert team in response_json[service]
 
+            if gen_tick == "0":
+                assert gen_tick not in response_json[service][team]
+                continue
+
             if gen_tick == tick:
                 assert tick in response_json[service][team]
                 assert f"{service}_{team}_{gen_tick}" == response_json[service][team][gen_tick]["username"]
 
             else:
-                assert tick not in response_json[service][team]
+                assert gen_tick not in response_json[service][team]
 
 
 def test_flag_id_filter_all(client: FlaskClient):
@@ -261,7 +265,7 @@ def test_flag_id_filter_all(client: FlaskClient):
 
     for service, team, tick in __generate_test_data():
         tick = str(tick)
-        response: TestResponse = client.get(f"/flagIds?round={tick}")
+        response: TestResponse = client.get(f"/flagIds?service={service}&team={team}&round={tick}")
 
         if tick == "0":
             assert response.status_code == 410
@@ -272,14 +276,27 @@ def test_flag_id_filter_all(client: FlaskClient):
         response_json = response.get_json()
 
         for gen_service, gen_team, gen_tick in __generate_test_data():
-            if gen_service == service and gen_team == team and gen_tick == tick:
+            if gen_service == service:
                 assert gen_service in response_json
+            else:
+                assert gen_service not in response_json
+                continue
+
+            if gen_team == team:
                 assert gen_team in response_json[gen_service]
-                assert tick in response_json[gen_service][gen_team]
+            else:
+                assert gen_team not in response_json[gen_service]
+                continue
+
+            if gen_tick == "0":
+                assert gen_tick not in response_json[gen_service][gen_team]
+                continue
+
+            if gen_tick == tick:
+                assert gen_tick in response_json[gen_service][gen_team]
                 assert (
                     f"{gen_service}_{gen_team}_{gen_tick}" == response_json[gen_service][gen_team][gen_tick]["username"]
                 )
             else:
-                assert gen_service not in response_json
-                assert gen_team not in response_json[gen_service]
-                assert tick not in response_json[gen_service][gen_team]
+                assert gen_tick not in response_json[gen_service][gen_team]
+                continue
