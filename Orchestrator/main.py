@@ -1,3 +1,4 @@
+import argparse
 import json
 import os
 import time
@@ -24,8 +25,12 @@ if not load_dotenv():
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--prometheus", help="Enables prometheus data exporting", action="store_true")
+    parser.add_argument("--prometheus-port", help="Port to use for prometheus", default=8500, type=int)
+    parser.add_argument("--prometheus-host", help="Host to use for prometheus", default="0.0.0.0", type=str)
 
-    start_http_server(int(os.getenv("PROMETHEUS_PORT")))
+    args = parser.parse_args()
 
     checker_configs: list[str] = [
         "../CyberChallenge.IT-AD-2024/checkers/CCForms-1",
@@ -44,9 +49,12 @@ def main():
         checkers.append(Checker(path, i))
 
     scheduler = Scheduler(checkers)
-    data_collector = CheckerCollectorGauge(checkers)
 
-    REGISTRY.register(data_collector)
+    if args.prometheus:
+        logger.info(f"Prometheus is enabled on {args.prometheus_host}:{args.prometheus_port}")
+        start_http_server(args.prometheus_port, args.prometheus_host)
+        data_collector = CheckerCollectorGauge(checkers)
+        REGISTRY.register(data_collector)
 
     ROUNDS = int(os.getenv("ROUNDS"))
     ROUND_TIME = int(os.getenv("ROUND_TIME"))  # Seconds
