@@ -33,6 +33,7 @@ class Scheduler:
         # Once done, normalize the times to the difference between one another
 
         for checker in self.checkers:
+            checker.update_current_tick(tick)
             for team in range(teams):
                 for action in Action:
                     if action == Action.CHECK_SLA:

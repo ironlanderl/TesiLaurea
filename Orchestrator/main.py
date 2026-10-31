@@ -1,12 +1,16 @@
+import argparse
 import json
 import os
 import time
 from datetime import datetime, timedelta
 
 from checker import Checker
+from collector import CheckerCollectorGauge
 from dotenv import load_dotenv
 from scheduler import Scheduler
 from utils import get_logger
+from prometheus_client import start_http_server
+from prometheus_client.core import REGISTRY
 
 logger = get_logger("Orchestrator")
 
@@ -21,6 +25,12 @@ if not load_dotenv():
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--prometheus", help="Enables prometheus data exporting", action="store_true")
+    parser.add_argument("--prometheus-port", help="Port to use for prometheus", default=8500, type=int)
+    parser.add_argument("--prometheus-host", help="Host to use for prometheus", default="0.0.0.0", type=str)
+
+    args = parser.parse_args()
 
     checker_configs: list[str] = [
         "../CyberChallenge.IT-AD-2024/checkers/CCForms-1",
@@ -40,6 +50,12 @@ def main():
 
     scheduler = Scheduler(checkers)
 
+    if args.prometheus:
+        logger.info(f"Prometheus is enabled on {args.prometheus_host}:{args.prometheus_port}")
+        start_http_server(args.prometheus_port, args.prometheus_host)
+        data_collector = CheckerCollectorGauge(checkers)
+        REGISTRY.register(data_collector)
+
     ROUNDS = int(os.getenv("ROUNDS"))
     ROUND_TIME = int(os.getenv("ROUND_TIME"))  # Seconds
 
@@ -47,6 +63,9 @@ def main():
     logger.debug(f"Main start time is {start_time}")
     for nround in range(ROUNDS):
         logger.info(f"Round {nround} started at {datetime.now().time()}")
+
+        if nround != 0:
+            data_collector.collect()
 
         scheduler.run(nround)
 
@@ -61,6 +80,11 @@ def main():
     for checker in checkers:
         with open(f"{report_dir}/checker_{checker.name}.json", "w") as f:
             json.dump(checker.status, f, default=lambda x: x.name, indent=2)
+
+    logger.debug(f"Going to sleep for {ROUND_TIME} to allow Prometheus to query the changes")
+    for checker in checkers:
+        checker.update_current_tick(checker.current_tick + 1)
+    time.sleep(ROUND_TIME)  # Sleeping for an extra round to allow Prometheus data to propagate
 
 
 if __name__ == "__main__":
