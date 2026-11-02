@@ -17,16 +17,12 @@ class ThreadDict(TypedDict):
 class Scheduler:
     def __init__(self, checkers: list[Checker], teams: int, tick_time: int) -> None:
         self.checkers: list[Checker] = checkers
-        self.min_time: int = 1
-        target_timeout: float = -1
-        # TODO: Have a per service scheduling range instead of using the same for all of them
-        for checker in checkers:
-            target_timeout = max(target_timeout, checker.get_biggest_timeout())
-        self.max_time: float = tick_time - target_timeout
+        self.min_time: float = 0.1
+        self.tick_time: int = (
+            tick_time - 1
+        )  # NOTE: Removes a second to make sure there's no issues with thread scheduling
         self.logger: Logger = get_logger("Scheduler")
         self.teams: int = teams
-
-        self.logger.debug(f"{self.max_time=}")
 
     def run(self, tick: int) -> None:
 
@@ -51,7 +47,7 @@ class Scheduler:
                                 ),
                                 name=f"{checker.name}_{team}_{action.name}",
                             ),
-                            rng_wait=random.uniform(self.min_time, self.max_time),
+                            rng_wait=random.uniform(self.min_time, self.tick_time - checker.get_biggest_timeout()),
                         )
                         thread_info.append(checker_thread)
                     elif action == Action.PUT_FLAG:
@@ -64,7 +60,7 @@ class Scheduler:
                                 ),
                                 name=f"{checker.name}_{team}_{action.name}",
                             ),
-                            rng_wait=random.uniform(self.min_time, self.max_time),
+                            rng_wait=random.uniform(self.min_time, self.tick_time - checker.get_biggest_timeout()),
                         )
                         thread_info.append(checker_thread)
                     elif action == Action.GET_FLAG:
@@ -78,7 +74,7 @@ class Scheduler:
                                     args=(team, tick, flag),
                                     name=f"{checker.name}_{team}_{action.name}",
                                 ),
-                                rng_wait=random.uniform(self.min_time, self.max_time),
+                                rng_wait=random.uniform(self.min_time, self.tick_time - checker.get_biggest_timeout()),
                             )
                             thread_info.append(checker_thread)
 
