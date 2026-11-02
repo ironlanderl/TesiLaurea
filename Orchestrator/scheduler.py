@@ -1,11 +1,10 @@
-import os
 import random
 import time
+from logging import Logger
 from threading import Thread
 from typing import NotRequired, Required, TypedDict
 
 from checker import Checker
-from dotenv import load_dotenv
 from utils import Action, get_logger
 
 
@@ -16,17 +15,23 @@ class ThreadDict(TypedDict):
 
 
 class Scheduler:
-    def __init__(self, checkers: list[Checker]) -> None:
+    def __init__(self, checkers: list[Checker], teams: int, tick_time: int) -> None:
         self.checkers: list[Checker] = checkers
-        self.min_time: int = int(os.getenv("MIN_WAIT"))
-        self.max_time: int = int(os.getenv("MAX_WAIT"))
-        self.logger = get_logger("Scheduler")
+        self.min_time: int = 1
+        target_timeout: float = -1
+        # TODO: Have a per service scheduling range instead of using the same for all of them
+        for checker in checkers:
+            target_timeout = max(target_timeout, checker.get_biggest_timeout())
+        self.max_time: float = tick_time - target_timeout
+        self.logger: Logger = get_logger("Scheduler")
+        self.teams: int = teams
+
+        self.logger.debug(f"{self.max_time=}")
 
     def run(self, tick: int) -> None:
 
         thread_info: list[ThreadDict] = []
 
-        teams = int(os.getenv("TEAMS"))
         # For each checker, team and action:
         # Calculate the random time for SLA and PUT
         # Then get the list of valid flags, and calculate the times for them
@@ -34,7 +39,7 @@ class Scheduler:
 
         for checker in self.checkers:
             checker.update_current_tick(tick)
-            for team in range(teams):
+            for team in range(self.teams):
                 for action in Action:
                     if action == Action.CHECK_SLA:
                         checker_thread: ThreadDict = ThreadDict(
@@ -98,20 +103,3 @@ class Scheduler:
         # Every thread should be done, but should probably still check
         for thread in threads_sorted:
             thread["thread"].join()
-
-
-if __name__ == "__main__":
-    load_dotenv()
-
-    checker_configs: list[str] = [
-        "../CyberChallenge.IT-AD-2024/checkers/CCForms-1",
-    ]
-
-    checkers: list[Checker] = []
-
-    for i, path in enumerate(checker_configs):
-        checkers.append(Checker(path, i))
-
-    scheduler = Scheduler(checkers)
-
-    scheduler.run(0)

@@ -1,8 +1,6 @@
 import json
 import os
 import pathlib
-import pprint
-import random
 import subprocess
 from logging import Logger
 from threading import Lock
@@ -26,7 +24,7 @@ class Checker:
         path (str): Path to the base dir of the checker
     """
 
-    def __init__(self, path: str, service_number: int) -> None:
+    def __init__(self, path: str, service_number: int, ticks: int) -> None:
 
         json_file = f"{path}/checker.json"
 
@@ -40,6 +38,8 @@ class Checker:
         self.SLA_timeout: int = data["timeout"]["CHECK_SLA"] / 1000
         self.PUT_timeout: int = data["timeout"]["PUT_FLAG"] / 1000
         self.GET_timeout: int = data["timeout"]["GET_FLAG"] / 1000
+
+        self.ticks: int = ticks
 
         self.service_number: int = service_number
 
@@ -213,7 +213,7 @@ class Checker:
         """
         self.__create_dict_data(team, tick)
 
-        if tick == int(os.getenv("ROUNDS")) - 1:  # pyright: ignore[reportArgumentType]. Gets forced by main
+        if tick == self.ticks - 1:  # pyright: ignore[reportArgumentType]. Gets forced by main
             self.logger.info("Reached last round. Skipping FLAG_IN")
             self.status[tick][team]["PUT"] = Status.CHECKER_DISABLED
             return
@@ -301,6 +301,14 @@ class Checker:
             _ = self.status.setdefault(tick, {}).setdefault(
                 team, TickInfo(SLA=Status.NOT_YET_CHECKED, GET=Status.NOT_YET_CHECKED, PUT=Status.NOT_YET_CHECKED)
             )
+
+    def get_biggest_timeout(self) -> float:
+        """
+        Returns the biggest timeout between SLA, GET and PUT
+        """
+        target: float = max(self.SLA_timeout, self.GET_timeout, self.PUT_timeout)
+        self.logger.debug(f"{target=}")
+        return target
 
     @override
     def __str__(self) -> str:

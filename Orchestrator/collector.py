@@ -1,15 +1,14 @@
-import os
-from prometheus_client.core import GaugeMetricFamily, CounterMetricFamily
-from prometheus_client.registry import Collector
-
 from checker import Checker
-from utils import Action, Status
+from prometheus_client.core import GaugeMetricFamily
+from prometheus_client.registry import Collector
+from utils import Action
 
 
 class CheckerCollectorGauge(Collector):
-    def __init__(self, checkers: list[Checker]) -> None:
+    def __init__(self, checkers: list[Checker], teams: int) -> None:
         super().__init__()
         self.checkers: list[Checker] = checkers
+        self.teams: int = teams
 
     def collect(self):
         status_check_metrics_labels = [
@@ -25,7 +24,7 @@ class CheckerCollectorGauge(Collector):
             labels=status_check_metrics_labels,
         )
 
-        for team in range(int(os.getenv("TEAMS"))):  # pyright: ignore[reportArgumentType]
+        for team in range(self.teams):
             for service in self.checkers:
                 tick_info = service.get_last_tick_team_info(team)
                 exitCode.add_metric(
