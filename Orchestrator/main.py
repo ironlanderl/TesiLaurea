@@ -13,14 +13,14 @@ from prometheus_client.core import REGISTRY
 from scheduler import Scheduler
 from utils import get_logger
 
-logger = get_logger("Orchestrator")
-
-if not load_dotenv():
-    logger.critical("Failed to load .env.")
-    sys.exit(-1)
-
 
 def main():
+    logger = get_logger("Orchestrator")
+
+    if not load_dotenv():
+        logger.critical("Failed to load .env.")
+        sys.exit(-1)
+
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("--ticks", help="Number of ticks to run", default=6, type=int)
     parser.add_argument("--tick-time", help="Tick duration in seconds", default=120, type=int)

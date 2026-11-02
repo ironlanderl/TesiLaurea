@@ -11,11 +11,19 @@ from utils import Action, get_logger
 class ThreadDict(TypedDict):
     thread: Required[Thread]
     rng_wait: Required[float]
-    wait: NotRequired[float]
+    wait: Required[float]
 
 
 class Scheduler:
     def __init__(self, checkers: list[Checker], teams: int, tick_time: int) -> None:
+        """
+        Creates a new scheduler
+
+        Args:
+            checkers (list[Checker]): List of checkers that will run
+            teams (int): Number of teams present
+            tick_time (time): Length of a single tick
+        """
         self.checkers: list[Checker] = checkers
         self.min_time: float = 0.1
         self.tick_time: int = (
@@ -25,13 +33,20 @@ class Scheduler:
         self.teams: int = teams
 
     def run(self, tick: int) -> None:
+        """
+        Main execution function.
+        For each checker, team and action:
+            1. Calculates the random time for SLA, PUT, and for each valid flag for GET
+            2. Sorts the list by wait time
+            3. Transforms from "wait from 0" to "wait from previous"
+            4. Waits the time and launches the relevant thread
+
+        Args:
+            tick (int): Zero indexed tick to execute
+
+        """
 
         thread_info: list[ThreadDict] = []
-
-        # For each checker, team and action:
-        # Calculate the random time for SLA and PUT
-        # Then get the list of valid flags, and calculate the times for them
-        # Once done, normalize the times to the difference between one another
 
         for checker in self.checkers:
             checker.update_current_tick(tick)
@@ -48,6 +63,7 @@ class Scheduler:
                                 name=f"{checker.name}_{team}_{action.name}",
                             ),
                             rng_wait=random.uniform(self.min_time, self.tick_time - checker.get_biggest_timeout()),
+                            wait=-1,
                         )
                         thread_info.append(checker_thread)
                     elif action == Action.PUT_FLAG:
@@ -61,6 +77,7 @@ class Scheduler:
                                 name=f"{checker.name}_{team}_{action.name}",
                             ),
                             rng_wait=random.uniform(self.min_time, self.tick_time - checker.get_biggest_timeout()),
+                            wait=-1,
                         )
                         thread_info.append(checker_thread)
                     elif action == Action.GET_FLAG:
@@ -75,6 +92,7 @@ class Scheduler:
                                     name=f"{checker.name}_{team}_{action.name}",
                                 ),
                                 rng_wait=random.uniform(self.min_time, self.tick_time - checker.get_biggest_timeout()),
+                                wait=-1,
                             )
                             thread_info.append(checker_thread)
 
@@ -92,8 +110,8 @@ class Scheduler:
 
         # We can now start the main calling loop
         for thread in threads_sorted:
-            self.logger.info(f"Sleeping for {thread['wait']} and then starting {thread['thread'].name}")  # pyright: ignore[reportTypedDictNotRequiredAccess]
-            time.sleep(thread["wait"])  # pyright: ignore[reportTypedDictNotRequiredAccess] Always gets set before this
+            self.logger.info(f"Sleeping for {thread['wait']} and then starting {thread['thread'].name}")
+            time.sleep(thread["wait"])
             thread["thread"].start()
 
         # Every thread should be done, but should probably still check

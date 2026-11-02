@@ -1,3 +1,5 @@
+from typing import override
+
 from checker import Checker
 from prometheus_client.core import GaugeMetricFamily
 from prometheus_client.registry import Collector
@@ -6,10 +8,18 @@ from utils import Action
 
 class CheckerCollectorGauge(Collector):
     def __init__(self, checkers: list[Checker], teams: int) -> None:
+        """
+        Initializes a new data collector
+
+        Args:
+            checkers (list[Checker]): List of all the checkers that will run
+            teams (int): Total number of teams
+        """
         super().__init__()
         self.checkers: list[Checker] = checkers
         self.teams: int = teams
 
+    @override
     def collect(self):
         status_check_metrics_labels = [
             # "team_shortname",

@@ -2,9 +2,10 @@ import json
 import os
 import pathlib
 import subprocess
+import sys
 from logging import Logger
 from threading import Lock
-from typing import NotRequired, Required, TypedDict, override
+from typing import Required, TypedDict, override
 
 from utils import Action, Status, generate_flag, get_logger
 
@@ -13,39 +14,48 @@ class TickInfo(TypedDict):
     SLA: Required[Status]
     GET: Required[Status]
     PUT: Required[Status]
-    flag: NotRequired[str]
+    flag: Required[str]
+
+
+class ConfigInfo(TypedDict):
+    command: str
+    timeout: dict[str, int]
 
 
 class Checker:
-    """
-    Initialize a new checker
-
-    Args:
-        path (str): Path to the base dir of the checker
-    """
-
     def __init__(self, path: str, service_number: int, ticks: int) -> None:
+        """
+        Initialize a new checker
+
+        Args:
+            path (str): Path to the base dir of the checker
+            service_number (int): Integer to represent the checker
+            ticks(int): Total number of ticks the program will execute
+        """
 
         json_file = f"{path}/checker.json"
+        self.logger: Logger = get_logger(self.name)
 
-        with open(json_file, "r") as f:
-            data = json.load(f)
+        try:
+            with open(json_file, "r") as f:
+                data: ConfigInfo = json.load(f)
+        except FileNotFoundError:
+            self.logger.critical(f"Error opening '{json_file}': File not found")
+            sys.exit(-1)
 
         self.name: str = pathlib.Path(path).as_posix().split("/")[-1]
         self.path: str = path
 
         self.command: str = data["command"]
-        self.SLA_timeout: int = data["timeout"]["CHECK_SLA"] / 1000
-        self.PUT_timeout: int = data["timeout"]["PUT_FLAG"] / 1000
-        self.GET_timeout: int = data["timeout"]["GET_FLAG"] / 1000
+        self.SLA_timeout: float = data["timeout"][Action.CHECK_SLA.name] / 1000
+        self.PUT_timeout: float = data["timeout"][Action.PUT_FLAG.name] / 1000
+        self.GET_timeout: float = data["timeout"][Action.GET_FLAG.name] / 1000
 
         self.ticks: int = ticks
 
         self.service_number: int = service_number
 
         self.status: dict[int, dict[int, TickInfo]] = {}
-
-        self.logger: Logger = get_logger(self.name)
 
         self.init_lock: Lock = Lock()
         self.get_lock: Lock = Lock()
@@ -213,7 +223,7 @@ class Checker:
         """
         self.__create_dict_data(team, tick)
 
-        if tick == self.ticks - 1:  # pyright: ignore[reportArgumentType]. Gets forced by main
+        if tick == self.ticks - 1:
             self.logger.info("Reached last round. Skipping FLAG_IN")
             self.status[tick][team]["PUT"] = Status.CHECKER_DISABLED
             return
@@ -257,6 +267,13 @@ class Checker:
         """
         Gets the last 5 valid flags
         Returns nothing if on first tick
+
+        Args:
+            team (int): Zero indexed team to get flags from
+            ntick (int): Zero indexed tick number to start the search from
+
+        Returns:
+            list[str]: List of the last five valid flags. Returns an empty list if there are none.
         """
 
         flags: list[str] = []
@@ -267,7 +284,7 @@ class Checker:
         for tick in range(ntick - 1, max(ntick - 1 - 5, -1), -1):
             self.logger.debug(f"Checking flag for tick {tick} team {team}. Status is {self.status[tick][team]['PUT']}")
             if self.status[tick][team]["PUT"] == Status.OK:
-                flags.append(self.status[tick][team]["flag"])  # pyright: ignore[reportTypedDictNotRequiredAccess]. Check down by is ok
+                flags.append(self.status[tick][team]["flag"])
 
         self.logger.debug(f"Valid flags for {ntick=}, {team=} are {flags}")
 
@@ -275,36 +292,57 @@ class Checker:
 
     def get_last_tick_team_info(self, team: int) -> TickInfo:
         """
-        Returns a TickInfo of the last game tick.
-        Returns NOT_YET_CHECKED on all of the actions if errors occur
+        Gets the relevant information about the previous tick
+
+        Args:
+            team (int): Zero indexed team
+
+        Returns:
+            TickInfo: The info about the last tick. If the information does not exist yet, the values are all set to Status.NOT_YET_CHECKED
         """
         if self.current_tick == 0:
             self.logger.debug("Tried accessing info on tick 0. Returning default values")
-            return TickInfo(SLA=Status.NOT_YET_CHECKED, GET=Status.NOT_YET_CHECKED, PUT=Status.NOT_YET_CHECKED)
+            return TickInfo(SLA=Status.NOT_YET_CHECKED, GET=Status.NOT_YET_CHECKED, PUT=Status.NOT_YET_CHECKED, flag="")
 
         last_tick = self.current_tick - 1
 
         if last_tick not in self.status:
             self.logger.critical("Tried accessing non existing tick somehow. Returning default values")
-            return TickInfo(SLA=Status.NOT_YET_CHECKED, GET=Status.NOT_YET_CHECKED, PUT=Status.NOT_YET_CHECKED)
+            return TickInfo(SLA=Status.NOT_YET_CHECKED, GET=Status.NOT_YET_CHECKED, PUT=Status.NOT_YET_CHECKED, flag="")
 
         return self.status[last_tick][team]
 
     def update_current_tick(self, tick: int) -> None:
+        """
+        Sets the internal tick number, used for extracting the status to show
+        Separate from the check operation to try and avoid a situation where all of the checks are done towards the end of the tick, and data gets misaligned
+
+        Args:
+            tick (int): Current zero indexed tick
+        """
         self.current_tick = tick
 
     def __create_dict_data(self, team: int, tick: int) -> None:
         """
-        Creates the basic structure for the status dict
+        Creates the basic structure for the status dict.
+        Sets every check to STATUS.NOT_YET_CHECKED
+
+        Args:
+            team (int): Zero indexed team id
+            tick (int): Zero indexed current tick
         """
         with self.init_lock:
             _ = self.status.setdefault(tick, {}).setdefault(
-                team, TickInfo(SLA=Status.NOT_YET_CHECKED, GET=Status.NOT_YET_CHECKED, PUT=Status.NOT_YET_CHECKED)
+                team,
+                TickInfo(SLA=Status.NOT_YET_CHECKED, GET=Status.NOT_YET_CHECKED, PUT=Status.NOT_YET_CHECKED, flag=""),
             )
 
     def get_biggest_timeout(self) -> float:
         """
-        Returns the biggest timeout between SLA, GET and PUT
+        Gets the biggest timeout value for the service
+
+        Returns:
+            float: The biggest value
         """
         target: float = max(self.SLA_timeout, self.GET_timeout, self.PUT_timeout)
         self.logger.debug(f"{target=}")
