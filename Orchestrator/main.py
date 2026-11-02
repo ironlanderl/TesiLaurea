@@ -5,6 +5,7 @@ import sys
 import time
 from datetime import datetime, timedelta
 
+import utils
 from checker import Checker
 from collector import CheckerCollectorGauge
 from dotenv import load_dotenv
@@ -15,12 +16,6 @@ from utils import get_logger
 
 
 def main():
-    logger = get_logger("Orchestrator")
-
-    if not load_dotenv():
-        logger.critical("Failed to load .env.")
-        sys.exit(-1)
-
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("--ticks", help="Number of ticks to run", default=6, type=int)
     parser.add_argument("--tick-time", help="Tick duration in seconds", default=120, type=int)
@@ -30,7 +25,18 @@ def main():
     parser.add_argument("--prometheus-port", help="Port to use for prometheus", default=8500, type=int)
     parser.add_argument("--prometheus-host", help="Host to use for prometheus", default="0.0.0.0", type=str)
 
+    parser.add_argument("--colored", help="Enables colored console output", action="store_true")
+
     args = parser.parse_args()
+
+    if args.colored:
+        utils.IS_COLOR_ENABLED = True
+
+    logger = get_logger("Orchestrator")
+
+    if not load_dotenv():
+        logger.critical("Failed to load .env.")
+        sys.exit(-1)
 
     TICKS: int = args.ticks
     TICK_TIME: int = args.tick_time

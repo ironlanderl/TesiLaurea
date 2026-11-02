@@ -2,7 +2,7 @@ import random
 import time
 from logging import Logger
 from threading import Thread
-from typing import NotRequired, Required, TypedDict
+from typing import Required, TypedDict
 
 from checker import Checker
 from utils import Action, get_logger

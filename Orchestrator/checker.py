@@ -34,6 +34,7 @@ class Checker:
         """
 
         json_file = f"{path}/checker.json"
+        self.name: str = pathlib.Path(path).as_posix().split("/")[-1]
         self.logger: Logger = get_logger(self.name)
 
         try:
@@ -43,7 +44,6 @@ class Checker:
             self.logger.critical(f"Error opening '{json_file}': File not found")
             sys.exit(-1)
 
-        self.name: str = pathlib.Path(path).as_posix().split("/")[-1]
         self.path: str = path
 
         self.command: str = data["command"]

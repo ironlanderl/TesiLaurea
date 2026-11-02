@@ -4,6 +4,8 @@ import random
 import string
 from enum import Enum
 
+IS_COLOR_ENABLED = False
+
 
 class Status(Enum):
     OK = 101
@@ -62,12 +64,41 @@ def get_logger(module: str) -> logging.Logger:
     logger.addHandler(console_handler)
     logger.addHandler(file_handler)
 
-    formatter = logging.Formatter(
+    formatter = CustomFormatter()
+    file_formatter = logging.Formatter(
         "{asctime} - {levelname} - {name} - {message}",
         style="{",
         datefmt="%Y-%m-%d %H:%M:%S",
     )
+
     console_handler.setFormatter(formatter)
-    file_handler.setFormatter(formatter)
+    file_handler.setFormatter(file_formatter)
 
     return logger
+
+
+class CustomFormatter(logging.Formatter):
+    grey: str = "\x1b[38;20m"
+    green: str = "\x1b[32;20m"
+    yellow: str = "\x1b[33;20m"
+    red: str = "\x1b[31;20m"
+    bold_red: str = "\x1b[31;1m"
+    reset: str = "\x1b[0m"
+    format: str = "%(asctime)s - %(levelname)s - %(name)s - %(message)s"
+
+    FORMATS = {
+        logging.DEBUG: grey + format + reset,
+        logging.INFO: green + format + reset,
+        logging.WARNING: yellow + format + reset,
+        logging.ERROR: red + format + reset,
+        logging.CRITICAL: bold_red + format + reset,
+        "No_Color": format,
+    }
+
+    def format(self, record):
+        if IS_COLOR_ENABLED:
+            log_fmt = self.FORMATS.get(record.levelno)
+        else:
+            log_fmt = self.FORMATS.get("No_Color")
+        formatter = logging.Formatter(log_fmt)
+        return formatter.format(record)
