@@ -3,16 +3,13 @@ import json
 import logging
 import os
 import pathlib
+import sqlite3
 from threading import Lock
 from typing import Any
 from uuid import uuid4
 
-from _pytest.raises import ResultHolder
 from dotenv import load_dotenv
 from flask import Flask, request
-import sqlite3
-
-from threading import Lock
 
 load_dotenv()
 

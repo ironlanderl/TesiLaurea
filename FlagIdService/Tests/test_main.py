@@ -1,13 +1,11 @@
 import os
-from pprint import pprint
 import sqlite3
-import sys
 import tempfile
-from typing import Generator
+from collections.abc import Generator
 from uuid import uuid4
 
-from flask.testing import FlaskClient
 import pytest
+from flask.testing import FlaskClient
 from werkzeug.test import TestResponse
 
 from ..app import app
