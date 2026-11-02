@@ -64,9 +64,6 @@ def main():
     for nround in range(ROUNDS):
         logger.info(f"Round {nround} started at {datetime.now().time()}")
 
-        if nround != 0:
-            data_collector.collect()
-
         scheduler.run(nround)
 
         if nround < ROUNDS - 1:  # Skip the waiting when exiting from the last round.

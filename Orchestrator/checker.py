@@ -2,6 +2,7 @@ import json
 import os
 import pathlib
 import pprint
+import random
 import subprocess
 from logging import Logger
 from threading import Lock
@@ -267,6 +268,8 @@ class Checker:
             self.logger.debug(f"Checking flag for tick {tick} team {team}. Status is {self.status[tick][team]['PUT']}")
             if self.status[tick][team]["PUT"] == Status.OK:
                 flags.append(self.status[tick][team]["flag"])  # pyright: ignore[reportTypedDictNotRequiredAccess]. Check down by is ok
+
+        self.logger.debug(f"Valid flags for {ntick=}, {team=} are {flags}")
 
         return flags
 

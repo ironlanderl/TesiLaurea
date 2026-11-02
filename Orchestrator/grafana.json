@@ -379,7 +379,8 @@
         "spec": {
           "maxColumnCount": 3,
           "columnWidthMode": "standard",
-          "rowHeightMode": "standard",
+          "rowHeigh
+          tMode": "standard",
           "items": []
         }
       }

@@ -16,7 +16,7 @@ class CheckerCollectorGauge(Collector):
             # "team_shortname",
             "team_id",
             "service_id",
-            # "service_shortname",
+            "service_shortname",
             "action",
         ]
         exitCode = GaugeMetricFamily(
@@ -29,13 +29,14 @@ class CheckerCollectorGauge(Collector):
             for service in self.checkers:
                 tick_info = service.get_last_tick_team_info(team)
                 exitCode.add_metric(
-                    [str(team), str(service.service_number), Action.CHECK_SLA.name], tick_info["SLA"].value
+                    [str(team), str(service.service_number), service.name, Action.CHECK_SLA.name],
+                    tick_info["SLA"].value,
                 )
                 exitCode.add_metric(
-                    [str(team), str(service.service_number), Action.GET_FLAG.name], tick_info["GET"].value
+                    [str(team), str(service.service_number), service.name, Action.GET_FLAG.name], tick_info["GET"].value
                 )
                 exitCode.add_metric(
-                    [str(team), str(service.service_number), Action.PUT_FLAG.name], tick_info["PUT"].value
+                    [str(team), str(service.service_number), service.name, Action.PUT_FLAG.name], tick_info["PUT"].value
                 )
 
         yield exitCode
