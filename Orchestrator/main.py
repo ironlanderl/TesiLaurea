@@ -1,6 +1,7 @@
 import argparse
 import json
 import os
+import pprint
 import sys
 import time
 from datetime import datetime, timedelta
@@ -27,12 +28,38 @@ def main():
 
     parser.add_argument("--colored", help="Enables colored console output", action="store_true")
 
+    parser.add_argument(
+        "checkers",
+        help="Path to a checker directory. Defaults to the ccitAD2024 checkers if not provided",
+        type=str,
+        action="extend",
+        nargs="*",
+        default=None,
+    )
+
     args = parser.parse_args()
+
+    checker_configs: list[str] = (
+        args.checkers
+        if args.checkers != []
+        else [
+            "../CyberChallenge.IT-AD-2024/checkers/CCForms-1",
+            "../CyberChallenge.IT-AD-2024/checkers/CCForms-2",
+            "../CyberChallenge.IT-AD-2024/checkers/ExCCel-1/",
+            "../CyberChallenge.IT-AD-2024/checkers/ExCCel-2/",
+            "../CyberChallenge.IT-AD-2024/checkers/CCalendar-1/",
+            "../CyberChallenge.IT-AD-2024/checkers/CCalendar-2/",
+            "../CyberChallenge.IT-AD-2024/checkers/Inlook-1/",
+            "../CyberChallenge.IT-AD-2024/checkers/Inlook-2/",
+        ]
+    )
 
     if args.colored:
         utils.IS_COLOR_ENABLED = True
 
     logger = get_logger("Orchestrator")
+
+    logger.debug(f"Enabled checkers: {pprint.pformat(checker_configs)}")
 
     if not load_dotenv():
         logger.critical("Failed to load .env.")
@@ -41,17 +68,6 @@ def main():
     TICKS: int = args.ticks
     TICK_TIME: int = args.tick_time
     TEAMS: int = args.teams
-
-    checker_configs: list[str] = [
-        "../CyberChallenge.IT-AD-2024/checkers/CCForms-1",
-        "../CyberChallenge.IT-AD-2024/checkers/CCForms-2",
-        "../CyberChallenge.IT-AD-2024/checkers/ExCCel-1/",
-        "../CyberChallenge.IT-AD-2024/checkers/ExCCel-2/",
-        "../CyberChallenge.IT-AD-2024/checkers/CCalendar-1/",
-        "../CyberChallenge.IT-AD-2024/checkers/CCalendar-2/",
-        "../CyberChallenge.IT-AD-2024/checkers/Inlook-1/",
-        "../CyberChallenge.IT-AD-2024/checkers/Inlook-2/",
-    ]
 
     checkers: list[Checker] = []
 
