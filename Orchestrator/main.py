@@ -1,4 +1,5 @@
 import argparse
+from dataclasses import dataclass
 import json
 import os
 import pprint
@@ -14,6 +15,21 @@ from prometheus_client import start_http_server
 from prometheus_client.core import REGISTRY
 from scheduler import Scheduler
 from utils import get_logger
+
+
+@dataclass
+class Arguments(argparse.Namespace):
+    ticks: int
+    tick_time: int
+    teams: int
+
+    prometheus: bool
+    prometheus_port: int
+    prometheus_host: str
+
+    colored: bool
+
+    checkers: list[str]
 
 
 def main():
@@ -37,7 +53,7 @@ def main():
         default=None,
     )
 
-    args = parser.parse_args()
+    args: type[Arguments] = parser.parse_args(namespace=Arguments)
 
     checker_configs: list[str] = (
         args.checkers
@@ -65,9 +81,23 @@ def main():
         logger.critical("Failed to load .env.")
         sys.exit(-1)
 
-    TICKS: int = args.ticks
-    TICK_TIME: int = args.tick_time
-    TEAMS: int = args.teams
+    if args.ticks > 0:
+        TICKS: int = args.ticks
+    else:
+        logger.critical(f"Invalid ticks '{args.ticks}'. Must be a positive integer")
+        sys.exit(-1)
+
+    if args.tick_time > 0:
+        TICK_TIME: int = args.tick_time
+    else:
+        logger.critical(f"Invalid tick duration '{args.ticks}'. Must be a positive integer")
+        sys.exit(-1)
+
+    if args.teams > 0:
+        TEAMS: int = args.teams
+    else:
+        logger.critical(f"Invalid team amount '{args.ticks}'. Must be a positive integer")
+        sys.exit(-1)
 
     checkers: list[Checker] = []
 
@@ -101,10 +131,11 @@ def main():
         with open(f"{report_dir}/checker_{checker.name}.json", "w") as f:
             json.dump(checker.status, f, default=lambda x: x.name, indent=2)
 
-    logger.debug(f"Going to sleep for {TICK_TIME} to allow Prometheus to query the changes")
     for checker in checkers:
-        checker.update_current_tick(checker.current_tick + 1)
-    time.sleep(TICK_TIME)  # Sleeping for an extra round to allow Prometheus data to propagate
+        checker.update_current_tick(checker.current_tick + 1)  # Extra tick for prometheus to fetch the latest tick data
+
+    while input("Exit? [Y/n] ").lower() != "y":
+        pass
 
 
 if __name__ == "__main__":
