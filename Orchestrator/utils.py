@@ -2,6 +2,7 @@ import logging
 import os
 import random
 import string
+import typing
 from enum import Enum
 
 IS_COLOR_ENABLED = False
@@ -86,7 +87,7 @@ class CustomFormatter(logging.Formatter):
     reset: str = "\x1b[0m"
     format: str = "%(asctime)s - %(levelname)s - %(name)s - %(message)s"
 
-    FORMATS = {
+    FORMATS: typing.ClassVar = {
         logging.DEBUG: grey + format + reset,
         logging.INFO: green + format + reset,
         logging.WARNING: yellow + format + reset,

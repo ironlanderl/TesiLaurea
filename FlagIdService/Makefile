@@ -1,6 +1,10 @@
 .PHONY: run
 run: .venv
-	./.venv/bin/flask run
+	./.venv/bin/python app.y
+
+.PHONY: run-new
+run-new: .venv
+	./.venv/bin/python app.y --reset
 
 .PHONY: test
 test: .venv

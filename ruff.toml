@@ -37,7 +37,7 @@ target-version = "py314"
 
 [lint]
 # select = [...]  # See the Default Rules page for the full listing.
-ignore = ["BLE001"]
+ignore = ["BLE001", "N999"]
 
 # Allow fix for all enabled rules (when `--fix`) is provided.
 fixable = ["ALL"]
@@ -72,3 +72,4 @@ docstring-code-format = false
 # This only has an effect when the `docstring-code-format` setting is
 # enabled.
 docstring-code-line-length = "dynamic"
+
