@@ -2,9 +2,11 @@ from datetime import datetime, timedelta
 
 import requests
 
-IN_RULE_ID = "6ae2580e0000000000000001"
-OUT_RULE_ID = "6ae2580c0000000000000000"
-PORT = 2222
+r = requests.get("http://127.0.0.1:3333/api/rules")
+
+IN_RULE_ID = r.json()[1]["id"]
+OUT_RULE_ID = r.json()[0]["id"]
+PORT = 3001
 
 r = requests.get(f"http://127.0.0.1:3333/api/connections?matched_rules={IN_RULE_ID}&service_port={PORT}")
 
@@ -68,6 +70,8 @@ while True:
     data.extend(r.json())
 
 found = 0
+min_diff = timedelta(seconds=9999999)
+max_diff = timedelta(seconds=0)
 
 start_date = datetime(2025, 6, 20, 9, 00, 00)
 for tick in range(50):
@@ -80,6 +84,9 @@ for tick in range(50):
         )
         if tick_start <= time_happened <= tick_end:
             print(f"FLAG_OUT happened at tick {tick} and at {time_happened}")
+            if tick < 6:
+                min_diff = min(min_diff, time_happened - tick_start)
+                max_diff = max(max_diff, time_happened - tick_start)
             found += 1
 
     if found == 0:
@@ -88,3 +95,7 @@ for tick in range(50):
         print(f"Multiple FLAG_OUT at tick {tick}. There were {found}")
 
     found = 0
+
+print(
+    f"Min time after tick start: {min_diff.total_seconds()} seconds.\nMax time after tick start: {max_diff.total_seconds()} seconds ({max_diff.total_seconds() // 60} minutes {max_diff.total_seconds() % 60} seconds)."
+)

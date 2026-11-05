@@ -11,18 +11,15 @@ caronte-service:
 			-H "Content-Type: application/json" \
 			-d '{"port":3001,"name":"CCForms2","color":"#43a047","notes":""}'
 	curl -X PUT "http://127.0.0.1:3333/api/services" \
-    -H "Content-Type: application/json" \
-    -d '{"port":2222,"name":"CookingNonna","color":"#e53935","notes":""}'
+	-H "Content-Type: application/json" \
+	-d '{"port":2222,"name":"CookingNonna","color":"#e53935","notes":""}'
 	curl -X PUT "http://127.0.0.1:3333/api/services" \
-    -H "Content-Type: application/json" \
-    -d '{"port":8000,"name":"exCCel","color":"#9e9d24","notes":""}'
+	-H "Content-Type: application/json" \
+	-d '{"port":8000,"name":"exCCel","color":"#9e9d24","notes":""}'
 
-
-
-#for i in *.pcap do
-#curl -X POST "http://127.0.0.1:3333/api/pcap/upload" \
-#    -H "Content-Type: multipart/form-data" \
-#    -F "file=@$i" \
-#    -F "flush_all=false"
+.PHONY: caronte-upload
+caronte-upload:
+	cd /run/media/ironlanderl/prefixes/dev/caronte/pcaps2; \
+	for file in *.pcap; do curl -X POST "http://127.0.0.1:3333/api/pcap/upload" -H "Content-Type: multipart/form-data" -F "file=@$$file" -F "flush_all=false"; done
 
 #http://127.0.0.1:3333/api/connections?matched_rules=6ae216420000000000000001&service_port=3001&limit=-1
