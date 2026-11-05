@@ -222,7 +222,7 @@ def test_flag_id_filter_tick(client: FlaskClient):
         response: TestResponse = client.get(f"/flagIds?round={tick}")
 
         if tick == "0":
-            assert response.status_code == 410
+            assert response.status_code == 400
             continue
 
         assert response.status_code == 200
@@ -266,7 +266,7 @@ def test_flag_id_filter_all(client: FlaskClient):
         response: TestResponse = client.get(f"/flagIds?service={service}&team={team}&round={tick}")
 
         if tick == "0":
-            assert response.status_code == 410
+            assert response.status_code == 400
             continue
 
         assert response.status_code == 200

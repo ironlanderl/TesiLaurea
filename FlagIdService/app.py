@@ -4,6 +4,7 @@ import logging
 import os
 import pathlib
 import sqlite3
+import sys
 from threading import Lock
 from typing import Any
 from uuid import uuid4
@@ -11,23 +12,54 @@ from uuid import uuid4
 from dotenv import load_dotenv
 from flask import Flask, request
 
-load_dotenv()
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+file_formatter = logging.Formatter(
+    "{asctime} - {levelname} - {name} - {message}",
+    style="{",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
+stream_handler = logging.StreamHandler()
+stream_handler.setFormatter(file_formatter)
+logger.addHandler(stream_handler)
 
-logger = logging.basicConfig(level=logging.DEBUG)
-
+if not load_dotenv():
+    logger.critical("Failed to load .env file.")
+    sys.exit(-1)
 
 app = Flask(__name__)
-app.config["DEBUG"] = True
 lock = Lock()
 
 
 @app.route("/health")
 def health():
+    """
+    Simple health check as a sanity check for the tests
+
+    Returns:
+        ("ok", 200)
+    """
     return "ok", 200
 
 
 @app.route("/postFlagId", methods=["POST"])
 def postFlagId():
+    """
+    Adds a new flagId to the database
+
+    Args:
+        serviceId (str): Name of the service
+        teamId (int): Zero indexed id of the team
+        round (int): Zero indexed current tick
+        flagId (Json): Information about how to retrieve the flag
+
+    Returns:
+        ("Invalid token", 401) if the token is invalid
+        ("Invalid round", 400) if `round` is an invalid number
+        ("Invalid teamId", 400) if `teamId` is an invalid number
+        ("Invalid serviceId", 400) if `serviceId` is an empty string
+        ("ok", 200) if the flagId was successfully inserted
+    """
 
     con: sqlite3.Connection = app.config["DB_CON"]
     data = request.get_json()
@@ -36,10 +68,25 @@ def postFlagId():
     if token != app.config["APP_TOKEN"]:
         return "Invalid token", 401
 
-    service_id: str = data["serviceId"]
-    team_id: int = data["teamId"]
-    round_id: int = data["round"]
+    service_id: str = str(data["serviceId"])
+    try:
+        team_id: int = int(data["teamId"])
+    except ValueError:
+        return "Invalid teamId", 400
+    try:
+        round_id: int = int(data["round"])
+    except ValueError:
+        return "Invalid round", 400
     flag_id: Any = data["flagId"]
+
+    if service_id == "":
+        return "Invalid serviceId", 400
+
+    if round_id < 0:
+        return "Invalid round", 400
+
+    if team_id < 0:
+        return "Invalid teamId", 400
 
     with lock:
         cur = con.cursor()
@@ -55,18 +102,53 @@ def postFlagId():
 
 @app.route("/flagIds", methods=["GET"])
 def flagIds():
+    """
+    Returns information about the last five valid flag ids.
+
+    Args:
+        service (Optional[str]): Name of the service to filter
+        team (Optional[int]): Zero indexed id of the team to filter
+        round (Optional[int]): Zero indexed number of the tick to filter
+
+    Returns:
+        ("Invalid tick", 400) if `round` is invalid
+        ("Invalid service", 400) if `service` does not exist
+        ("Invalid team", 400) if `team` does not exist
+        (Json object, 200) if the request was valid, where the object is
+        {
+            service_name: str {
+                team_id: str {
+                    tick: str {
+                        flag_id: json
+                    }
+                }
+            }
+        }
+    """
     con: sqlite3.Connection = app.config["DB_CON"]
     cur = con.cursor()
     service_id: str = request.args.get("service", "")
-    team_id: int = int(request.args.get("team", -1))
-    round_id: int = int(request.args.get("round", -1))
+    try:
+        team_id: int = int(request.args.get("team", -1))
+    except ValueError:
+        return "Invalid team", 400
+    try:
+        round_id: int = int(request.args.get("round", -1))
+    except ValueError:
+        return "Invalid tick", 400
 
     return_data = {}
 
-    _, _, ticks = __get_data()
+    services, teams, ticks = __get_data()
 
     if round_id != -1 and round_id not in ticks:
-        return "invalid", 410
+        return "Invalid tick", 400
+
+    if service_id != "" and service_id not in services:
+        return "Invalid service", 400
+
+    if team_id != -1 and team_id not in teams:
+        return "Invalid team", 400
 
     if len(ticks) == 0:
         return {}
@@ -97,13 +179,31 @@ def flagIds():
 
 @app.route("/", methods=["GET"])
 def root():
+    """
+    Returns the available services, teams and ticks
 
+    Returns:
+        {
+            "services": list[str],
+            "teams": list[str],
+            "ticks": list[str],
+        }
+    """
     services, teams, ticks = __get_data()
 
     return {"services": services, "teams": [str(x) for x in teams], "ticks": [str(x) for x in ticks]}
 
 
-def __get_data():
+def __get_data() -> tuple[list[str], list[int], list[int]]:
+    """
+    Gets the available and relevant data
+
+    Returns:
+        Tuple with:
+            - List of the services as strings
+            - List of the teams as int
+            - List of the five last valid ticks as int
+    """
     con: sqlite3.Connection = app.config["DB_CON"]
     cur = con.cursor()
 
@@ -126,6 +226,7 @@ if __name__ == "__main__":
     con = sqlite3.connect("flagIds.db", check_same_thread=False)
     app.config["DB_CON"] = con
     app.config["APP_TOKEN"] = os.getenv("APP_TOKEN")
+    app.config["DEBUG"] = True
 
     if not exists or args.reset:
         con.execute("DROP TABLE IF EXISTS data")
