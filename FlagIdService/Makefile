@@ -1,10 +1,10 @@
 .PHONY: run
 run: .venv
-	./.venv/bin/python app.y
+	./.venv/bin/python app.py
 
 .PHONY: run-new
 run-new: .venv
-	./.venv/bin/python app.y --reset
+	./.venv/bin/python app.py --reset
 
 .PHONY: test
 test: .venv
