@@ -1,101 +1,85 @@
+import argparse
 from datetime import datetime, timedelta
+from typing import TypedDict
 
 import requests
 
-r = requests.get("http://127.0.0.1:3333/api/rules")
 
-IN_RULE_ID = r.json()[1]["id"]
-OUT_RULE_ID = r.json()[0]["id"]
-PORT = 3001
-
-r = requests.get(f"http://127.0.0.1:3333/api/connections?matched_rules={IN_RULE_ID}&service_port={PORT}")
-
-data: list[str] = r.json()
-
-while True:
-    r = requests.get(
-        f"http://127.0.0.1:3333/api/connections?matched_rules={IN_RULE_ID}&service_port={PORT}&from={data[-1]['id']}"
-    )
-    if r.json()[-1]["id"] == data[-1]["id"]:
-        break
-    data.extend(r.json())
-
-# Loop for each tick with time.
-# Check for each data point if it is inside of the time frame for the tick
-# Calculate the difference between tick start and FLAG_IN
-# Save both the min and max differences.
-
-min_diff = timedelta(seconds=9999999)
-max_diff = timedelta(seconds=0)
-found = 0
-
-start_date = datetime(2025, 6, 20, 9, 00, 00)
-for tick in range(240):
-    tick_start = start_date + timedelta(minutes=2 * tick)
-    tick_end = tick_start + timedelta(minutes=2)
-
-    for flag_in in data:
-        time_happened = datetime.strptime(flag_in["started_at"], "%Y-%m-%dT%H:%M:%S.%fZ")
-        if tick_start <= time_happened <= tick_end:
-            print(f"FLAG_IN tick {tick} happened at {time_happened}")
-            min_diff = min(min_diff, time_happened - tick_start)
-            max_diff = max(max_diff, time_happened - tick_start)
-
-            found += 1
-
-    if found == 0:
-        print(f"No FLAG_IN at tick {tick}")
-    if found > 1:
-        print(f"Multiple FLAG_IN at tick {tick}")
-
-    found = 0
+class CaronteData(TypedDict):
+    id: int
+    started_at: str
 
 
-print(
-    f"Min time after tick start: {min_diff.total_seconds()} seconds.\nMax time after tick start: {max_diff.total_seconds()} seconds ({max_diff.total_seconds() // 60} minutes {max_diff.total_seconds() % 60} seconds)."
-)
+def run_tests(rule: str, port: int) -> tuple[timedelta, timedelta]:
 
-# ====================================================== #
+    data: list[CaronteData] = []
 
-r = requests.get(f"http://127.0.0.1:3333/api/connections?matched_rules={OUT_RULE_ID}&service_port={PORT}")
-
-data: list[str] = r.json()
-
-while True:
-    r = requests.get(
-        f"http://127.0.0.1:3333/api/connections?matched_rules={OUT_RULE_ID}&service_port={PORT}&from={data[-1]['id']}"
-    )
-    if r.json()[-1]["id"] == data[-1]["id"]:
-        break
-    data.extend(r.json())
-
-found = 0
-min_diff = timedelta(seconds=9999999)
-max_diff = timedelta(seconds=0)
-
-start_date = datetime(2025, 6, 20, 9, 00, 00)
-for tick in range(50):
-    tick_start = start_date + timedelta(minutes=2 * tick)
-    tick_end = tick_start + timedelta(minutes=2)
-
-    for flag_in in data:
-        time_happened = datetime.strptime(
-            flag_in["started_at"], "%Y-%m-%dT%H:%M:%S.%fZ" if "." in flag_in["started_at"] else "%Y-%m-%dT%H:%M:%SZ"
+    while True:
+        r = requests.get(
+            f"http://127.0.0.1:3333/api/connections?matched_rules={rule}&service_port={port}"
+            if len(data) == 0
+            else f"http://127.0.0.1:3333/api/connections?matched_rules={rule}&service_port={port}&from={data[-1]['id']}"
         )
-        if tick_start <= time_happened <= tick_end:
-            print(f"FLAG_OUT happened at tick {tick} and at {time_happened}")
-            if tick < 6:
-                min_diff = min(min_diff, time_happened - tick_start)
-                max_diff = max(max_diff, time_happened - tick_start)
-            found += 1
-
-    if found == 0:
-        print(f"No FLAG_OUT at tick {tick}")
-    if found > 1:
-        print(f"Multiple FLAG_OUT at tick {tick}. There were {found}")
+        if len(data) != 0 and (r.json()[-1]["id"] == data[-1]["id"]):
+            break
+        data.extend(r.json())
 
     found = 0
+    min_diff = timedelta(seconds=9999999)
+    max_diff = timedelta(seconds=0)
 
-print(
-    f"Min time after tick start: {min_diff.total_seconds()} seconds.\nMax time after tick start: {max_diff.total_seconds()} seconds ({max_diff.total_seconds() // 60} minutes {max_diff.total_seconds() % 60} seconds)."
-)
+    start_date = datetime(2025, 6, 20, 9, 00, 00)
+    for tick in range(50):
+        tick_start = start_date + timedelta(minutes=2 * tick)
+        tick_end = tick_start + timedelta(minutes=2)
+
+        for flag_in in data:
+            time_happened = datetime.strptime(
+                flag_in["started_at"],
+                "%Y-%m-%dT%H:%M:%S.%fZ"
+                if "." in flag_in["started_at"]
+                else "%Y-%m-%dT%H:%M:%SZ",  # Handles the milliseconds not always being present
+            )
+            if tick_start <= time_happened <= tick_end:
+                print(f"FLAG_OUT happened at tick {tick} and at {time_happened}")
+                if tick < 6:
+                    min_diff = min(min_diff, time_happened - tick_start)
+                    max_diff = max(max_diff, time_happened - tick_start)
+                found += 1
+
+        if found == 0:
+            print(f"No FLAG_OUT at tick {tick}")
+        if found > 1:
+            print(f"Multiple FLAG_OUT at tick {tick}. There were {found}")
+
+        found = 0
+
+    return (min_diff, max_diff)
+
+
+def main():
+    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument("port", help="Port", type=int)
+
+    args = parser.parse_args()
+
+    r = requests.get("http://127.0.0.1:3333/api/rules")
+
+    IN_RULE_ID = r.json()[1]["id"]
+    OUT_RULE_ID = r.json()[0]["id"]
+
+    min_diff, max_diff = run_tests(IN_RULE_ID, args.port)
+
+    print(
+        f"Min time after tick start: {min_diff.total_seconds()} seconds.\nMax time after tick start: {max_diff.total_seconds()} seconds ({max_diff.total_seconds() // 60} minutes {max_diff.total_seconds() % 60} seconds)."
+    )
+
+    min_diff, max_diff = run_tests(OUT_RULE_ID, args.port)
+
+    print(
+        f"Min time after tick start: {min_diff.total_seconds()} seconds.\nMax time after tick start: {max_diff.total_seconds()} seconds ({max_diff.total_seconds() // 60} minutes {max_diff.total_seconds() % 60} seconds)."
+    )
+
+
+if __name__ == "__main__":
+    main()
