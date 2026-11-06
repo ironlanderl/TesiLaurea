@@ -41,16 +41,16 @@ def run_tests(rule: str, port: int) -> tuple[timedelta, timedelta]:
                 else "%Y-%m-%dT%H:%M:%SZ",  # Handles the milliseconds not always being present
             )
             if tick_start <= time_happened <= tick_end:
-                print(f"FLAG_OUT happened at tick {tick} and at {time_happened}")
+                print(f"Action happened at tick {tick} and at {time_happened}")
                 if tick < 6:
                     min_diff = min(min_diff, time_happened - tick_start)
                     max_diff = max(max_diff, time_happened - tick_start)
                 found += 1
 
         if found == 0:
-            print(f"No FLAG_OUT at tick {tick}")
+            print(f"No actions at tick {tick}")
         if found > 1:
-            print(f"Multiple FLAG_OUT at tick {tick}. There were {found}")
+            print(f"Multiple actions at tick {tick}. There were {found}")
 
         found = 0
 
@@ -60,6 +60,7 @@ def run_tests(rule: str, port: int) -> tuple[timedelta, timedelta]:
 def main():
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("port", help="Port", type=int)
+    parser.add_argument("action", help="Action", choices=["IN", "OUT"])
 
     args = parser.parse_args()
 
@@ -68,13 +69,7 @@ def main():
     IN_RULE_ID = r.json()[1]["id"]
     OUT_RULE_ID = r.json()[0]["id"]
 
-    min_diff, max_diff = run_tests(IN_RULE_ID, args.port)
-
-    print(
-        f"Min time after tick start: {min_diff.total_seconds()} seconds.\nMax time after tick start: {max_diff.total_seconds()} seconds ({max_diff.total_seconds() // 60} minutes {max_diff.total_seconds() % 60} seconds)."
-    )
-
-    min_diff, max_diff = run_tests(OUT_RULE_ID, args.port)
+    min_diff, max_diff = run_tests(IN_RULE_ID if args.action == "IN" else OUT_RULE_ID, args.port)
 
     print(
         f"Min time after tick start: {min_diff.total_seconds()} seconds.\nMax time after tick start: {max_diff.total_seconds()} seconds ({max_diff.total_seconds() // 60} minutes {max_diff.total_seconds() % 60} seconds)."
