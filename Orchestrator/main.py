@@ -102,7 +102,7 @@ def main():
     checkers: list[Checker] = []
 
     for i, path in enumerate(checker_configs):
-        checkers.append(Checker(path, i, TICKS))
+        checkers.append(Checker(path, i, TEAMS, TICKS))
 
     scheduler = Scheduler(checkers, TEAMS, TICK_TIME)
 

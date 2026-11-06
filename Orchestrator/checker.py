@@ -23,13 +23,14 @@ class ConfigInfo(TypedDict):
 
 
 class Checker:
-    def __init__(self, path: str, service_number: int, ticks: int) -> None:
+    def __init__(self, path: str, service_number: int, teams: int, ticks: int) -> None:
         """
         Initialize a new checker
 
         Args:
             path (str): Path to the base dir of the checker
             service_number (int): Integer to represent the checker
+            teams(int): Total number of teams present
             ticks(int): Total number of ticks the program will execute
         """
 
@@ -58,7 +59,7 @@ class Checker:
         self.status: dict[int, dict[int, TickInfo]] = {}
 
         self.init_lock: Lock = Lock()
-        self.get_lock: Lock = Lock()
+        self.get_locks: list[Lock] = [Lock() for _ in range(teams)]
 
         self.current_tick: int = 0
 
@@ -111,8 +112,12 @@ class Checker:
         """
         self.__create_dict_data(team, tick)
 
+        if team > len(self.get_locks):
+            self.logger.critical("Tried to access a lock for a non existing team")
+            sys.exit(-1)
+
         # NOTE: The entire get operation is under lock
-        with self.get_lock:
+        with self.get_locks[team]:
             # If down or Disabled, skip to save time
             if self.status[tick][team]["GET"] in (Status.DOWN, Status.CHECKER_DISABLED, Status.ERROR):
                 return
