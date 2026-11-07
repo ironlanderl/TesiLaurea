@@ -1,10 +1,35 @@
+import os
+import sqlite3
+import tempfile
 from collections.abc import Generator
 from uuid import uuid4
 
+from flask import Flask
 from flask.testing import FlaskClient
 from werkzeug.test import TestResponse
 
 from ..app import app
+
+
+@pytest.fixture
+def client() -> Generator[FlaskClient]:
+    app.config.update({"TESTING": True, "APP_TOKEN": "TEST_TOKEN", "DB_CON": sqlite3.connect(":memory:")})
+
+    con: sqlite3.Connection = app.config["DB_CON"]
+
+    con.execute("DROP TABLE IF EXISTS data")
+    con.execute("""CREATE TABLE data (
+                uuid text PRIMARY KEY,
+                service int NOT NULL,
+                team int NOT NULL,
+                tick int NOT NULL,
+                flag_id blob NOT NULL
+                )""")
+
+    with app.test_client() as client:
+        yield client
+
+    con.close()
 
 
 def __generate_test_data() -> Generator[tuple[str, str, str]]:
@@ -21,12 +46,12 @@ def test_health_check(client: FlaskClient):
     assert 200 == response.status_code
 
 
-def test_insertion(client: FlaskClient):
+def test_insertion(client: FlaskClient, app_fixture: Flask):
     for test in __generate_test_data():
         response: TestResponse = client.post(
             "/postFlagId",
             json={
-                "token": app.config["APP_TOKEN"],
+                "token": app_fixture.config["APP_TOKEN"],
                 "serviceId": test[0],
                 "teamId": test[1],
                 "round": test[2],
@@ -39,12 +64,12 @@ def test_insertion(client: FlaskClient):
         assert response.text == "ok"
 
 
-def test_root(client: FlaskClient):
+def test_root(client: FlaskClient, app_fixture: Flask):
     for test in __generate_test_data():
         _: TestResponse = client.post(
             "/postFlagId",
             json={
-                "token": app.config["APP_TOKEN"],
+                "token": app_fixture.config["APP_TOKEN"],
                 "serviceId": test[0],
                 "teamId": test[1],
                 "round": test[2],
@@ -69,12 +94,12 @@ def test_root(client: FlaskClient):
             assert tick in response_json["ticks"]
 
 
-def test_flag_id(client: FlaskClient):
+def test_flag_id(client: FlaskClient, app_fixture: Flask):
     for test in __generate_test_data():
         _: TestResponse = client.post(
             "/postFlagId",
             json={
-                "token": app.config["APP_TOKEN"],
+                "token": app_fixture.config["APP_TOKEN"],
                 "serviceId": test[0],
                 "teamId": test[1],
                 "round": test[2],
@@ -100,12 +125,12 @@ def test_flag_id(client: FlaskClient):
             assert f"{service}_{team}_{tick}" == response_json[service][team][tick]["username"]
 
 
-def test_flag_id_filter_service(client: FlaskClient):
+def test_flag_id_filter_service(client: FlaskClient, app_fixture: Flask):
     for test in __generate_test_data():
         _: TestResponse = client.post(
             "/postFlagId",
             json={
-                "token": app.config["APP_TOKEN"],
+                "token": app_fixture.config["APP_TOKEN"],
                 "serviceId": test[0],
                 "teamId": test[1],
                 "round": test[2],
@@ -137,12 +162,12 @@ def test_flag_id_filter_service(client: FlaskClient):
                 assert f"{gen_service}_{team}_{tick}" == response_json[gen_service][team][tick]["username"]
 
 
-def test_flag_id_filter_team(client: FlaskClient):
+def test_flag_id_filter_team(client: FlaskClient, app_fixture: Flask):
     for test in __generate_test_data():
         _: TestResponse = client.post(
             "/postFlagId",
             json={
-                "token": app.config["APP_TOKEN"],
+                "token": app_fixture.config["APP_TOKEN"],
                 "serviceId": test[0],
                 "teamId": test[1],
                 "round": test[2],
@@ -174,12 +199,12 @@ def test_flag_id_filter_team(client: FlaskClient):
                 assert f"{service}_{gen_team}_{tick}" == response_json[service][gen_team][tick]["username"]
 
 
-def test_flag_id_filter_tick(client: FlaskClient):
+def test_flag_id_filter_tick(client: FlaskClient, app_fixture: Flask):
     for test in __generate_test_data():
         _: TestResponse = client.post(
             "/postFlagId",
             json={
-                "token": app.config["APP_TOKEN"],
+                "token": app_fixture.config["APP_TOKEN"],
                 "serviceId": test[0],
                 "teamId": test[1],
                 "round": test[2],
@@ -218,12 +243,12 @@ def test_flag_id_filter_tick(client: FlaskClient):
                 assert gen_tick not in response_json[service][team]
 
 
-def test_flag_id_filter_all(client: FlaskClient):
+def test_flag_id_filter_all(client: FlaskClient, app_fixture: Flask):
     for test in __generate_test_data():
         _: TestResponse = client.post(
             "/postFlagId",
             json={
-                "token": app.config["APP_TOKEN"],
+                "token": app_fixture.config["APP_TOKEN"],
                 "serviceId": test[0],
                 "teamId": test[1],
                 "round": test[2],

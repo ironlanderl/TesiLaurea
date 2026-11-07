@@ -1,9 +1,12 @@
+import os
+import sqlite3
+import tempfile
+from collections.abc import Generator
 from uuid import uuid4
 
+from flask import Config, Flask
 from flask.testing import FlaskClient
 from werkzeug.test import TestResponse
-
-from ..app import app
 
 
 def test_health_check(client: FlaskClient):
@@ -29,11 +32,11 @@ def test_insert_bad_token(client: FlaskClient):
     assert response.status_code == 401
 
 
-def test_insert_bad_serviceId(client: FlaskClient):
+def test_insert_bad_serviceId(client: FlaskClient, app_fixture: Flask):
     response: TestResponse = client.post(
         "/postFlagId",
         json={
-            "token": app.config["APP_TOKEN"],
+            "token": app_fixture.config["APP_TOKEN"],
             "serviceId": "",
             "teamId": 0,
             "round": 0,
@@ -47,11 +50,11 @@ def test_insert_bad_serviceId(client: FlaskClient):
     assert response.text == "Invalid serviceId"
 
 
-def test_insert_bad_teamId(client: FlaskClient):
+def test_insert_bad_teamId(client: FlaskClient, app_fixture: Flask):
     response: TestResponse = client.post(
         "/postFlagId",
         json={
-            "token": app.config["APP_TOKEN"],
+            "token": app_fixture.config["APP_TOKEN"],
             "serviceId": "TestService",
             "teamId": -1,
             "round": 0,
@@ -65,11 +68,11 @@ def test_insert_bad_teamId(client: FlaskClient):
     assert response.text == "Invalid teamId"
 
 
-def test_insert_string_teamId(client: FlaskClient):
+def test_insert_string_teamId(client: FlaskClient, app_fixture: Flask):
     response: TestResponse = client.post(
         "/postFlagId",
         json={
-            "token": app.config["APP_TOKEN"],
+            "token": app_fixture.config["APP_TOKEN"],
             "serviceId": "TestService",
             "teamId": "TestString",
             "round": 0,
@@ -83,11 +86,11 @@ def test_insert_string_teamId(client: FlaskClient):
     assert response.text == "Invalid teamId"
 
 
-def test_insert_bad_round(client: FlaskClient):
+def test_insert_bad_round(client: FlaskClient, app_fixture: Flask):
     response: TestResponse = client.post(
         "/postFlagId",
         json={
-            "token": app.config["APP_TOKEN"],
+            "token": app_fixture.config["APP_TOKEN"],
             "serviceId": "TestService",
             "teamId": 0,
             "round": -1,
@@ -101,11 +104,11 @@ def test_insert_bad_round(client: FlaskClient):
     assert response.text == "Invalid round"
 
 
-def test_insert_string_round(client: FlaskClient):
+def test_insert_string_round(client: FlaskClient, app_fixture: Flask):
     response: TestResponse = client.post(
         "/postFlagId",
         json={
-            "token": app.config["APP_TOKEN"],
+            "token": app_fixture.config["APP_TOKEN"],
             "serviceId": "TestService",
             "teamId": 0,
             "round": "TestString",
