@@ -13,8 +13,7 @@ from ..app import app
 
 @pytest.fixture
 def client() -> Generator[FlaskClient]:
-    tempdir = tempfile.mkdtemp()
-    app.config.update({"TESTING": True, "APP_TOKEN": "TEST_TOKEN", "DB_CON": sqlite3.connect(f"{tempdir}/db.sql")})
+    app.config.update({"TESTING": True, "APP_TOKEN": "TEST_TOKEN", "DB_CON": sqlite3.connect(":memory:")})
 
     con: sqlite3.Connection = app.config["DB_CON"]
 
@@ -31,7 +30,6 @@ def client() -> Generator[FlaskClient]:
         yield client
 
     con.close()
-    os.system(f"rm -rf {tempdir}")
 
 
 def test_health_check(client: FlaskClient):
