@@ -1,0 +1,41 @@
+---
+
+name: Lints and runs tests
+
+on: [push]
+
+jobs:
+  Lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.14'
+
+      - name: Install ruff and check
+        uses: astral-sh/ruff-action@v4.1.0
+
+  TestFlagId:
+    needs: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.14'
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.3.3
+        with:
+          version: '0.13.4'
+
+      - name: Install dependencies and run tests
+        working-directory: ./FlagIdService
+        run: make test

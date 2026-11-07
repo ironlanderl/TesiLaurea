@@ -1,8 +1,8 @@
 import sqlite3
 from collections.abc import Generator
 
-from flask import Flask
 import pytest
+from flask import Flask
 from flask.testing import FlaskClient
 
 from ..app import app

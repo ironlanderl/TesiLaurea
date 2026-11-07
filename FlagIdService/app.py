@@ -23,9 +23,6 @@ stream_handler = logging.StreamHandler()
 stream_handler.setFormatter(file_formatter)
 logger.addHandler(stream_handler)
 
-if not load_dotenv():
-    logger.critical("Failed to load .env file.")
-    sys.exit(-1)
 
 app = Flask(__name__)
 lock = Lock()
@@ -218,6 +215,9 @@ def __get_data() -> tuple[list[str], list[int], list[int]]:
 
 
 if __name__ == "__main__":
+    if not load_dotenv():
+        logger.critical("Failed to load .env file.")
+        sys.exit(-1)
     exists = pathlib.Path("flagIds.db").exists()
     parser = argparse.ArgumentParser()
     parser.add_argument("--reset", help="Resets the persistence db", action="store_true")

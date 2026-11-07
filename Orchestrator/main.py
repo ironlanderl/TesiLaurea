@@ -1,10 +1,10 @@
 import argparse
-from dataclasses import dataclass
 import json
 import os
 import pprint
 import sys
 import time
+from dataclasses import dataclass
 from datetime import datetime, timedelta
 
 import utils
