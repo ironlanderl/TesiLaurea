@@ -10,7 +10,14 @@ class CaronteData(TypedDict):
     started_at: str
 
 
-def run_tests(rule: str, port: int) -> tuple[timedelta, timedelta]:
+def get_ports() -> list[str]:
+    r = requests.get("http://127.0.0.1:3333/api/statistics/totals")
+    ports = [x for x in r.json()["connections_per_service"].keys()]
+
+    return ports
+
+
+def run_tests(rule: str, action: str, port: str) -> tuple[timedelta, timedelta]:
 
     data: list[CaronteData] = []
 
@@ -29,7 +36,7 @@ def run_tests(rule: str, port: int) -> tuple[timedelta, timedelta]:
     max_diff = timedelta(seconds=0)
 
     start_date = datetime(2025, 6, 20, 9, 00, 00)
-    for tick in range(50):
+    for tick in range(50 if action == "OUT" else 240):
         tick_start = start_date + timedelta(minutes=2 * tick)
         tick_end = tick_start + timedelta(minutes=2)
 
@@ -59,17 +66,21 @@ def run_tests(rule: str, port: int) -> tuple[timedelta, timedelta]:
 
 def main():
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument("port", help="Port", type=int)
     parser.add_argument("action", help="Action", choices=["IN", "OUT"])
 
     args = parser.parse_args()
+
+    ports = get_ports()
+
+    print(f"Available ports: {ports}")
+    port = input("Port > ")
 
     r = requests.get("http://127.0.0.1:3333/api/rules")
 
     IN_RULE_ID = r.json()[1]["id"]
     OUT_RULE_ID = r.json()[0]["id"]
 
-    min_diff, max_diff = run_tests(IN_RULE_ID if args.action == "IN" else OUT_RULE_ID, args.port)
+    min_diff, max_diff = run_tests(IN_RULE_ID if args.action == "IN" else OUT_RULE_ID, args.action, port)
 
     print(
         f"Min time after tick start: {min_diff.total_seconds()} seconds.\nMax time after tick start: {max_diff.total_seconds()} seconds ({max_diff.total_seconds() // 60} minutes {max_diff.total_seconds() % 60} seconds)."

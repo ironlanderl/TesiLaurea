@@ -17,9 +17,24 @@ caronte-service:
 	-H "Content-Type: application/json" \
 	-d '{"port":8000,"name":"exCCel","color":"#9e9d24","notes":""}'
 
-.PHONY: caronte-upload
-caronte-upload:
-	cd /run/media/ironlanderl/prefixes/dev/caronte/pcaps2; \
+.PHONY: caronte-upload-20250620
+caronte-upload-20250620:
+	cd /run/media/ironlanderl/prefixes/dev/caronte/newCaps/20250620/pcaps; \
+	for file in *.pcap; do curl -X POST "http://127.0.0.1:3333/api/pcap/upload" -H "Content-Type: multipart/form-data" -F "file=@$$file" -F "flush_all=false"; done
+
+.PHONY: caronte-upload-20250621
+caronte-upload-20250621:
+	cd /run/media/ironlanderl/prefixes/dev/caronte/newCaps/20250621/pcaps; \
+	for file in *.pcap; do curl -X POST "http://127.0.0.1:3333/api/pcap/upload" -H "Content-Type: multipart/form-data" -F "file=@$$file" -F "flush_all=false"; done
+
+.PHONY: caronte-upload-20260619
+caronte-upload-20260619:
+	cd /run/media/ironlanderl/prefixes/dev/caronte/newCaps/20260619/pcaps; \
+	for file in *.pcap; do curl -X POST "http://127.0.0.1:3333/api/pcap/upload" -H "Content-Type: multipart/form-data" -F "file=@$$file" -F "flush_all=false"; done
+
+.PHONY: caronte-upload-20260620
+caronte-upload-20260620:
+	cd /run/media/ironlanderl/prefixes/dev/caronte/newCaps/20260620/pcaps; \
 	for file in *.pcap; do curl -X POST "http://127.0.0.1:3333/api/pcap/upload" -H "Content-Type: multipart/form-data" -F "file=@$$file" -F "flush_all=false"; done
 
 #http://127.0.0.1:3333/api/connections?matched_rules=6ae216420000000000000001&service_port=3001&limit=-1
