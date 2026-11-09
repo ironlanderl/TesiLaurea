@@ -12,7 +12,7 @@ class CaronteData(TypedDict):
 
 def get_ports() -> list[str]:
     r = requests.get("http://127.0.0.1:3333/api/statistics/totals")
-    ports = [x for x in r.json()["connections_per_service"].keys()]
+    ports = [x for x in r.json()["connections_per_service"]]
 
     return ports
 
