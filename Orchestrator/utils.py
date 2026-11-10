@@ -1,11 +1,13 @@
 import logging
 import os
+import pathlib
 import random
 import string
 import typing
 from enum import Enum
 
 IS_COLOR_ENABLED = False
+IS_LOGGER_CREATED = False
 
 
 class Status(Enum):
@@ -53,8 +55,13 @@ def generate_flag(team: int, nround: int, nservice: int = 0) -> str:
 
 
 def get_logger(module: str) -> logging.Logger:
+    logger_path = pathlib.Path("app.log")
 
-    os.remove("app.log")
+    global IS_LOGGER_CREATED
+
+    if not IS_LOGGER_CREATED and logger_path.exists():
+        logger_path.unlink()
+        IS_LOGGER_CREATED = True
 
     logger = logging.getLogger(module)
     logger.setLevel(logging.DEBUG)

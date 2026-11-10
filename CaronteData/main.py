@@ -1,4 +1,5 @@
 import argparse
+import sys
 from datetime import datetime, timedelta
 from typing import TypedDict
 
@@ -21,21 +22,30 @@ def run_tests(rule: str, action: str, port: str) -> tuple[timedelta, timedelta]:
 
     data: list[CaronteData] = []
 
+    i = 0
+
     while True:
         r = requests.get(
             f"http://127.0.0.1:3333/api/connections?matched_rules={rule}&service_port={port}"
             if len(data) == 0
             else f"http://127.0.0.1:3333/api/connections?matched_rules={rule}&service_port={port}&from={data[-1]['id']}"
         )
+        if len(data) == 0 and len(r.json()) == 0:
+            print("Empty response at the first loop. Exiting")
+            sys.exit(1)
+
+        print(f"Getting data. Loop {i}, size is {len(data)}")
         if len(data) != 0 and (r.json()[-1]["id"] == data[-1]["id"]):
             break
         data.extend(r.json())
+        i += 1
 
     found = 0
     min_diff = timedelta(seconds=9999999)
     max_diff = timedelta(seconds=0)
 
-    start_date = datetime(2025, 6, 20, 9, 00, 00)
+    start_date = datetime(2026, 6, 19, 9, 00, 00)
+
     for tick in range(50 if action == "OUT" else 240):
         tick_start = start_date + timedelta(minutes=2 * tick)
         tick_end = tick_start + timedelta(minutes=2)

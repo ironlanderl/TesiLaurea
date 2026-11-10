@@ -134,7 +134,7 @@ def main():
     for checker in checkers:
         checker.update_current_tick(checker.current_tick + 1)  # Extra tick for prometheus to fetch the latest tick data
 
-    while input("Exit? [Y/n] ").lower() != "y":
+    while input("Exit? [y/N] ").lower() != "y":
         pass
 
 
