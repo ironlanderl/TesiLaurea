@@ -1,10 +1,27 @@
 .PHONY: caronte-user25
 caronte-user25:
 	curl -X POST "http://127.0.0.1:3333/setup" -H "Content-Type: application/json" -d '{"config":{"server_address":"10.60.38.1","flag_regex":"[A-Z0-9]{31}=","auth_required":false},"accounts":{"a": "b"}}'
+	curl 'http://127.0.0.1:3333/api/rules' \
+		-X POST \
+		-H 'Content-Type: application/json' \
+		--data-raw '{"name":"exccel1_in","color":"#5e35b1","notes":"","enabled":true,"patterns":[{"regex":"\\x22[A-Fa-f0-9]{62}3d\\x22","flags":{"caseless":false,"dot_all":false,"multi_line":false,"utf_8_mode":false,"unicode_property":false},"min_occurrences":0,"max_occurrences":0,"direction":1}],"filter":{"service_port":0,"client_address":"","client_port":0,"min_duration":0,"max_duration":0,"min_bytes":0,"max_bytes":0},"version":0}'
+	curl 'http://127.0.0.1:3333/api/rules' \
+		-X POST \
+		-H 'Content-Type: application/json' \
+		--data-raw '{"name":"exccel1_out","color":"#5e35b1","notes":"","enabled":true,"patterns":[{"regex":"\\x22[A-Fa-f0-9]{62}3d\\x22","flags":{"caseless":false,"dot_all":false,"multi_line":false,"utf_8_mode":false,"unicode_property":false},"min_occurrences":0,"max_occurrences":0,"direction":2}],"filter":{"service_port":0,"client_address":"","client_port":0,"min_duration":0,"max_duration":0,"min_bytes":0,"max_bytes":0},"version":0}'
+
 
 .PHONY: caronte-user26
 caronte-user26:
 	curl -X POST "http://127.0.0.1:3333/setup" -H "Content-Type: application/json" -d '{"config":{"server_address":"10.60.39.1","flag_regex":"[A-Z0-9]{31}=","auth_required":false},"accounts":{"a": "b"}}'
+	curl 'http://127.0.0.1:3333/api/rules' \
+		-X POST \
+		-H 'Content-Type: application/json' \
+		--data-raw '{"name":"exccel1_in","color":"#5e35b1","notes":"","enabled":true,"patterns":[{"regex":"\\x22[A-Fa-f0-9]{62}3d\\x22","flags":{"caseless":false,"dot_all":false,"multi_line":false,"utf_8_mode":false,"unicode_property":false},"min_occurrences":0,"max_occurrences":0,"direction":1}],"filter":{"service_port":0,"client_address":"","client_port":0,"min_duration":0,"max_duration":0,"min_bytes":0,"max_bytes":0},"version":0}'
+	curl 'http://127.0.0.1:3333/api/rules' \
+		-X POST \
+		-H 'Content-Type: application/json' \
+		--data-raw '{"name":"exccel1_out","color":"#5e35b1","notes":"","enabled":true,"patterns":[{"regex":"\\x22[A-Fa-f0-9]{62}3d\\x22","flags":{"caseless":false,"dot_all":false,"multi_line":false,"utf_8_mode":false,"unicode_property":false},"min_occurrences":0,"max_occurrences":0,"direction":2}],"filter":{"service_port":0,"client_address":"","client_port":0,"min_duration":0,"max_duration":0,"min_bytes":0,"max_bytes":0},"version":0}'
 
 .PHONY: caronte-service
 caronte-service:

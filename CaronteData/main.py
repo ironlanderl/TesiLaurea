@@ -1,7 +1,8 @@
 import argparse
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 from typing import TypedDict
+from pick import pick
 
 import requests
 
@@ -18,7 +19,9 @@ def get_ports() -> list[str]:
     return ports
 
 
-def run_tests(rule: str, action: str, port: str) -> tuple[timedelta, timedelta] | tuple[None, None]:
+def run_tests(
+    rule: str, action: str, port: str, stop_time: time = time(23, 59, 59)
+) -> tuple[timedelta, timedelta] | tuple[None, None]:
 
     data: list[CaronteData] = []
 
@@ -44,11 +47,14 @@ def run_tests(rule: str, action: str, port: str) -> tuple[timedelta, timedelta] 
     min_diff = timedelta(seconds=9999999)
     max_diff = timedelta(seconds=-1)
 
-    start_date = datetime(2026, 6, 20, 9, 00, 00)
+    start_date = datetime(2025, 6, 21, 9, 00, 00)
 
-    for tick in range(20 if action == "OUT" else 240):
+    for tick in range(241):
         tick_start = start_date + timedelta(minutes=2 * tick)
         tick_end = tick_start + timedelta(minutes=2)
+
+        if stop_time <= tick_start.time():
+            break
 
         for flag_in in data:
             time_happened = datetime.strptime(
@@ -58,15 +64,15 @@ def run_tests(rule: str, action: str, port: str) -> tuple[timedelta, timedelta] 
                 else "%Y-%m-%dT%H:%M:%SZ",  # Handles the milliseconds not always being present
             )
             if tick_start <= time_happened <= tick_end:
-                print(f"Action happened at tick {tick} and at {time_happened}")
+                print(f"[{tick_start.time()}] Action happened at tick {tick} and at {time_happened}")
                 min_diff = min(min_diff, time_happened - tick_start)
                 max_diff = max(max_diff, time_happened - tick_start)
                 found += 1
 
         if found == 0:
-            print(f"No actions at tick {tick}")
+            print(f"[{tick_start.time()}] No actions at tick {tick}")
         if found > 1:
-            print(f"Multiple actions at tick {tick}. There were {found}")
+            print(f"[{tick_start.time()}] Multiple actions at tick {tick}. There were {found}")
 
         found = 0
 
@@ -75,10 +81,7 @@ def run_tests(rule: str, action: str, port: str) -> tuple[timedelta, timedelta] 
 
 def latex_handler():
 
-    r = requests.get("http://127.0.0.1:3333/api/rules")
-
-    IN_RULE_ID = r.json()[1]["id"]
-    OUT_RULE_ID = r.json()[0]["id"]
+    exit(1)
 
     data: dict[str, dict[str, None | timedelta]] = {}
 
@@ -130,29 +133,25 @@ def latex_handler():
 
 
 def main():
-    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument("action", help="Action", choices=["IN", "OUT", "LATEX"])
-
-    args = parser.parse_args()
-
-    if args.action == "LATEX":
-        latex_handler()
+    r = requests.get("http://127.0.0.1:3333/api/rules")
+    rules = [{"id": x["id"], "name": x["name"]} for x in r.json()]
+    _, index = pick(rules, "Select rule")
+    rule = rules[index]
 
     ports = get_ports()
+    port, index = pick(ports, "Select port")
 
-    print(f"Available ports: {ports}")
-    port = input("Port > ")
-
-    r = requests.get("http://127.0.0.1:3333/api/rules")
-
-    IN_RULE_ID = r.json()[1]["id"]
-    OUT_RULE_ID = r.json()[0]["id"]
-
-    min_diff, max_diff = run_tests(IN_RULE_ID if args.action == "IN" else OUT_RULE_ID, args.action, port)
+    if "_in" in rule["name"]:
+        min_diff, max_diff = run_tests(rule["id"], "IN", port)
+    else:
+        end_time = input("[HH:MM:SS] > ")
+        min_diff, max_diff = run_tests(rule["id"], "OUT", port, time.strptime(end_time, "%H:%M:%S"))
 
     print(
         f"Min time after tick start: {min_diff.total_seconds()} seconds.\nMax time after tick start: {max_diff.total_seconds()} seconds ({max_diff.total_seconds() // 60} minutes {max_diff.total_seconds() % 60} seconds)."
     )
+
+    print(f" {min_diff.total_seconds()}s | {max_diff.total_seconds()}s |")
 
 
 if __name__ == "__main__":
