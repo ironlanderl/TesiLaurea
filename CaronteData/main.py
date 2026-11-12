@@ -1,10 +1,8 @@
-import argparse
-import sys
-from datetime import datetime, timedelta, time
+from datetime import datetime, time, timedelta
 from typing import TypedDict
-from pick import pick
 
 import requests
+from pick import pick
 
 
 class CaronteData(TypedDict):
@@ -77,59 +75,6 @@ def run_tests(
         found = 0
 
     return (min_diff, max_diff)
-
-
-def latex_handler():
-
-    exit(1)
-
-    data: dict[str, dict[str, None | timedelta]] = {}
-
-    ports = get_ports()
-
-    for port in ports:
-        min_diff, max_diff = run_tests(IN_RULE_ID, "IN", port)
-        data[port] = {"in_min": min_diff, "in_max": max_diff}
-
-        min_diff, max_diff = run_tests(OUT_RULE_ID, "OUT", port)
-        data[port] = data[port] | {"out_min": min_diff, "out_max": max_diff}
-
-    __import__("pprint").pprint(data)
-
-    output_str: str = "Operazione "
-
-    for port in data:
-        if data[port]["in_min"] is not None and data[port]["out_min"] is not None:
-            output_str += f"& Port {port} "
-
-    output_str += "\\\\ \n \\midrule \\\\ \n PUT\\_FLAG minimo"
-
-    for port in data:
-        if data[port]["in_min"] is not None and data[port]["out_min"] is not None:
-            output_str += f"& {data[port]['in_min'].total_seconds()}s "
-
-    output_str += "\\\\\n PUT\\_FLAG massimo"
-
-    for port in data:
-        if data[port]["in_min"] is not None and data[port]["out_min"] is not None:
-            output_str += f"& {data[port]['in_max'].total_seconds()}s "
-
-    output_str += "\\\\\n GET\\_FLAG minimo"
-
-    for port in data:
-        if data[port]["in_min"] is not None and data[port]["out_min"] is not None:
-            output_str += f"& {data[port]['out_min'].total_seconds()}s "
-
-    output_str += "\\\\\n GET\\_FLAG massimo"
-
-    for port in data:
-        if data[port]["in_min"] is not None and data[port]["out_min"] is not None:
-            output_str += f"& {data[port]['out_max'].total_seconds()}s "
-
-    output_str += "\\\\"
-
-    print(output_str)
-    sys.exit(0)
 
 
 def main():
