@@ -9,7 +9,7 @@
 | CCForms-2     | 3001 |
 | CCalendar-1   | 8443 |
 | CCalendar-2   | 8443 |
-| Exccel-2      | 8000 |
+| Exccel-1      | 8000 |
 | Exccel-2      | 8000 |
 | Cooking Nonna | 2222 |
 
@@ -50,3 +50,28 @@
 | Exccel-2      | 11:04 | 2.335s | 83.013s  |         |          |
 | Cooking Nonna | XXXXX | 1.98s  | 103.017s | 1.447s  | 103.243s |
 
+
+
+## 2026-06-19
+
+| Service       | Blood | IN_MIN | IN_MAX   | OUT_MIN | OUT_MAX  |
+|---------------|-------|--------|----------|---------|----------|
+| CCForms-1      | 13:04 | 1.741s | 107.666s |
+| CCForms-2      | 11:28 | 1.741s | 107.666s |
+| CCalendar-1    | 11:22 |
+| CCalendar-2    | 11:52 |
+| Exccel-1       | 14:10 | 1.594s | 82.823s | 1.366s | 85.741s |
+| Exccel-2       | 11:14 | 1.425s | 82.97s |
+| CookingNonna-1 | 14:04 | 1.775s | 72.696s | 1.31s | 87.973s |
+
+## 2026-06-20
+
+| Service       | Blood | IN_MIN | IN_MAX   | OUT_MIN | OUT_MAX  |
+|---------------|-------|--------|----------|---------|----------|
+| CCForms-1      | 11:04 |
+| CCForms-2      | 11:04 |
+| CCalendar-1    | 11:04 |
+| CCalendar-2    | 11:04 |
+| Exccel-1       | 11:16 |
+| Exccel-2       | 11:14 |
+| CookingNonna-1 | 14:46 |
